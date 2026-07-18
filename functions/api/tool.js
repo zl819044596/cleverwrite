@@ -30,7 +30,8 @@ export async function onRequest(context) {
       shorten: 'Shorten this text while keeping all key information. Remove fluff, redundant words, and unnecessary phrases. Make it tight and direct.',
       polish: 'Polish this text: fix grammar, spelling, and punctuation. Improve sentence flow and readability. Keep the original meaning and tone intact.',
       formalize: 'Make this text more formal and professional. Use sophisticated vocabulary, formal sentence structures, and appropriate academic/business tone.',
-      simplify: 'Simplify this text to make it easier to understand. Use simpler words, shorter sentences, and clearer structure. Keep the core meaning.'
+      simplify: 'Simplify this text to make it easier to understand. Use simpler words, shorter sentences, and clearer structure. Keep the core meaning.',
+      translate: 'Translate this text to natural, fluent English. If the text is already in English, translate it to clear, conversational Chinese. If the text is in another language, translate it to natural English. Keep the original meaning, tone, and style. Output ONLY the translation, nothing else.'
     };
 
     const systemPrompt = `You are a professional writing assistant. Your job is to ${verb} text according to the instructions below.

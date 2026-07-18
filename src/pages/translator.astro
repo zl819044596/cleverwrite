@@ -1,0 +1,151 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Free Translator — Translate Text Between Languages | CleverWrite" description="Translate text between languages for free. Powered by AI, supports English, Chinese, and more." canonical="/translator">
+  <main class="container section-block" style="padding-top:var(--space-3)">
+    <nav class="breadcrumbs">
+      <a href="/">Home</a>
+      <span>/</span>
+      <span>Translator</span>
+    </nav>
+
+    <section class="hero" style="padding:var(--space-3) 0">
+      <h1>Free AI Translator</h1>
+      <p>Translate text between English, Chinese, and other languages. Keep the original meaning and tone.</p>
+    </section>
+
+    <!-- Dual panel -->
+    <div class="dual-panel">
+      <div class="panel panel-input">
+        <div class="panel-label"><span class="panel-dot"></span> Source Text</div>
+        <textarea id="inputText" class="panel-textarea" placeholder="Paste text to translate here..."></textarea>
+      </div>
+      <div class="panel-divider">
+        <button id="actionBtn" class="panel-arrow-btn" title="Translate">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+      <div class="panel panel-output">
+        <div class="panel-label"><span class="panel-dot panel-dot-green"></span> Translation</div>
+        <div id="resultText" class="panel-textarea panel-output-text" style="color:var(--text-muted)">
+          <span style="opacity:0.5">Click the arrow to translate...</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between mt-2" style="margin-bottom:var(--space-3)">
+      <span id="charCount" style="font-size:var(--text-xs);color:var(--text-muted)">0 / 5000</span>
+      <span id="statusBadge" class="stat-badge success hidden" style="display:none">✅ Done</span>
+    </div>
+
+    <!-- Use cases + FAQ -->
+    <div class="grid-2" style="margin-bottom:var(--space-3)">
+      <div class="card" style="padding:var(--space-2)">
+        <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Use Cases</h3>
+        <ul style="font-size:var(--text-sm);color:var(--text-muted);padding-left:var(--space-2)">
+          <li style="margin-bottom:6px">Translate articles and documents between languages</li>
+          <li style="margin-bottom:6px">Localize content for international audiences</li>
+          <li style="margin-bottom:6px">Understand foreign language text quickly</li>
+        </ul>
+      </div>
+      <div class="card" style="padding:var(--space-2)">
+        <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">FAQ</h3>
+        <div class="faq-item" style="padding:6px 0">
+          <div class="faq-q" style="font-size:var(--text-sm)">What languages are supported?</div>
+          <div class="faq-a" style="font-size:var(--text-xs)">Our AI translates between English, Chinese, and many other languages. It can detect the source language automatically.</div>
+        </div>
+        <div class="faq-item" style="padding:6px 0;border:none">
+          <div class="faq-q" style="font-size:var(--text-sm)">Is the translation accurate?</div>
+          <div class="faq-a" style="font-size:var(--text-xs)">Our AI-powered translator preserves meaning, tone, and style. It's best for natural text rather than technical documentation.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related -->
+    <section style="margin-bottom:var(--space-4)">
+      <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-2)">Related Tools</h3>
+      <div class="grid-4">
+        <a href="/translate-essay" class="tool-link-card" style="font-size:var(--text-xs)">📄 Translate Essay</a>
+        <a href="/translate-article" class="tool-link-card" style="font-size:var(--text-xs)">📝 Translate Article</a>
+        <a href="/translate-email" class="tool-link-card" style="font-size:var(--text-xs)">✉️ Translate Email</a>
+        <a href="/humanizer" class="tool-link-card" style="font-size:var(--text-xs)">🤖 AI Humanizer</a>
+        <a href="/paraphraser" class="tool-link-card" style="font-size:var(--text-xs)">🔄 Paraphraser</a>
+        <a href="/summarizer" class="tool-link-card" style="font-size:var(--text-xs)">📝 Summarizer</a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .dual-panel {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+  }
+  .panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-base);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .panel-input { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: none; }
+  .panel-output { border-top-left-radius: 0; border-bottom-left-radius: 0; border-left: none; }
+  .panel-label { font-size: var(--text-xs); font-weight: 600; color: var(--text-muted); padding: 8px 12px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 6px; background: var(--bg-page); }
+  .panel-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-primary); display: inline-block; }
+  .panel-dot-green { background: var(--success); }
+  .panel-textarea { flex: 1; border: none; padding: var(--space-2); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--leading-base); color: var(--text-body); resize: none; min-height: 200px; outline: none; }
+  .panel-input .panel-textarea { background: var(--bg-input); }
+  .panel-output-text { white-space: pre-wrap; overflow-y: auto; }
+  .panel-divider { display: flex; align-items: center; justify-content: center; background: var(--bg-page); padding: 0 4px; }
+  .panel-arrow-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-base); background: var(--bg-card); color: var(--color-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; flex-shrink: 0; }
+  .panel-arrow-btn:hover { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+  .panel-arrow-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  @media (max-width: 767px) {
+    .dual-panel { grid-template-columns: 1fr; }
+    .panel-input { border-radius: var(--radius-md); border-right: 1px solid var(--border-base); }
+    .panel-output { border-radius: var(--radius-md); border-left: 1px solid var(--border-base); }
+    .panel-divider { padding: 4px 0; }
+    .panel-arrow-btn { transform: rotate(90deg); }
+    .panel-textarea { min-height: 140px; }
+  }
+</style>
+
+<script>
+  const btn = document.getElementById('actionBtn');
+  const textarea = document.getElementById('inputText');
+  const resultText = document.getElementById('resultText');
+  const statusBadge = document.getElementById('statusBadge');
+  const charCount = document.getElementById('charCount');
+  let isLoading = false;
+
+  btn?.addEventListener('click', async () => {
+    const text = textarea?.value.trim();
+    if (!text || isLoading) return;
+    isLoading = true;
+    btn.disabled = true;
+    resultText.textContent = '⏳ Translating...';
+    if (statusBadge) statusBadge.style.display = 'none';
+    try {
+      const res = await fetch('/api/tool', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, verb: 'translate' })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'API error');
+      resultText.textContent = data.result;
+      if (statusBadge) { statusBadge.textContent = '✅ Done'; statusBadge.style.display = ''; }
+    } catch (err) {
+      resultText.textContent = 'Error: ' + err.message;
+      if (statusBadge) { statusBadge.textContent = '⚠️ Error'; statusBadge.style.display = ''; }
+    } finally {
+      isLoading = false;
+      btn.disabled = false;
+    }
+  });
+
+  textarea?.addEventListener('input', function() { charCount.textContent = this.value.length + ' / 5000'; });
+</script>

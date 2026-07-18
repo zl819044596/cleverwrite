@@ -11,22 +11,21 @@ export function getStaticPaths() {
 
 const { slug, verb, displayVerb, displayAction, contentType, h1, desc } = Astro.props;
 
-// Related pages (same verb)
-const related = pages.filter(p => p.verb === verb && p.slug !== slug).slice(0, 6);
+const related = pages.filter(p => p.verb === verb && p.slug !== slug).slice(0, 8);
 
 const icon = { humanize:'🤖', rewrite:'✏️', paraphrase:'🔄', improve:'⬆️', polish:'✨', summarize:'📝', expand:'🔍', shorten:'✂️', formalize:'👔', simplify:'📖' }[verb] || '🛠️';
 
-const useCases = [
-  `You just used AI to generate ${contentType.toLowerCase()} content and need to make it sound natural.`,
-  `Your ${contentType.toLowerCase()} needs to pass AI detection tools like GPTZero or Turnitin.`,
-  `You want to improve the readability and flow of your ${contentType.toLowerCase()}.`,
+const verbExamples = [
+  `the ${contentType.toLowerCase()} you just generated with ChatGPT`,
+  `a rough draft of your ${contentType.toLowerCase()}`,
+  `an AI-written ${contentType.toLowerCase()} that needs to pass AI detection`
 ];
 ---
 
 <Layout title={`${h1} | CleverWrite`} description={desc} canonical={`/${slug}`}>
-  <main class="container section-block" style="padding-top:var(--space-3)">
+  <main class="container">
     <!-- Breadcrumb -->
-    <nav class="breadcrumbs">
+    <nav class="breadcrumbs" style="padding-top:var(--space-2);margin-bottom:var(--space-2)">
       <a href="/">Home</a>
       <span>/</span>
       <a href="/tools">{displayVerb}</a>
@@ -34,74 +33,174 @@ const useCases = [
       <span>{contentType}</span>
     </nav>
 
-    <!-- H1 -->
-    <h1 style="margin-bottom:var(--space-1)">{icon} {h1}</h1>
-    <p style="color:var(--text-muted);font-size:var(--text-sm);margin-bottom:var(--space-3)">{desc}</p>
+    <!-- Dual-panel tool -->
+    <section style="margin-bottom:var(--space-3)">
+      <h1 style="margin-bottom:4px">{icon} {h1}</h1>
+      <p style="font-size:var(--text-sm);color:var(--text-muted);margin-bottom:var(--space-2)">{desc}</p>
 
-    <!-- Tool Panel -->
-    <div class="tool-panel">
-      <div class="flex items-center gap-1" style="margin-bottom:var(--space-2)">
-        <span class="tag">{displayVerb}</span>
-        <span style="font-size:var(--text-xs);color:var(--text-muted)">{contentType}</span>
+      <div class="dual-panel">
+        <div class="panel panel-input">
+          <div class="panel-label">
+            <span class="panel-dot"></span>
+            Your {contentType}
+          </div>
+          <textarea id="inputText" class="panel-textarea" placeholder={`Paste your ${contentType.toLowerCase()} here...`}>Paste your {contentType.toLowerCase()} here to {verb} it...</textarea>
+        </div>
+
+        <div class="panel-divider">
+          <button id="actionBtn" data-verb={verb} class="panel-arrow-btn" title={displayAction}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+
+        <div class="panel panel-output">
+          <div class="panel-label">
+            <span class="panel-dot panel-dot-green"></span>
+            {displayVerb}ed {contentType}
+          </div>
+          <div id="resultText" class="panel-textarea panel-output-text" style="color:var(--text-muted)">
+            <span style="opacity:0.5">Click the arrow to {verb}...</span>
+          </div>
+        </div>
       </div>
-      <textarea id="inputText" class="text-input" style="min-height:200px" placeholder={`Paste your ${contentType.toLowerCase()} here...`}></textarea>
-      <div class="flex justify-between items-center mt-2">
-        <span class="char-count" style="font-size:var(--text-xs);color:var(--text-muted)">0 / 5000</span>
-        <button id="actionBtn" data-verb={verb} class="btn-primary">{icon} {displayAction} This {contentType}</button>
+
+      <div class="flex items-center justify-between mt-2">
+        <span class="char-count" style="font-size:var(--text-xs);color:var(--text-muted)">0 / 5000 characters</span>
+        <span id="statusBadge" class="stat-badge success hidden" style="display:none">✅ Done</span>
       </div>
-      <div id="resultArea" class="mt-3 hidden">
-        <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Result</h3>
-        <div id="resultText" class="result-box"></div>
-        <div class="flex gap-1 mt-2">
-          <button id="copyBtn" class="btn-secondary">📋 Copy</button>
-          <span id="statusBadge" class="stat-badge success hidden">✅ Done</span>
+    </section>
+
+    <!-- Use Cases + FAQ -->
+    <div class="grid-2" style="margin-bottom:var(--space-3)">
+      <div class="card" style="padding:var(--space-2)">
+        <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">When to Use</h3>
+        <ul style="font-size:var(--text-sm);color:var(--text-muted);padding-left:var(--space-2)">
+          <li style="margin-bottom:6px">{verbExamples[0]}</li>
+          <li style="margin-bottom:6px">{verbExamples[1]}</li>
+          <li style="margin-bottom:6px">{verbExamples[2]}</li>
+        </ul>
+      </div>
+      <div class="card" style="padding:var(--space-2)">
+        <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">FAQ</h3>
+        <div class="faq-item" style="padding:6px 0">
+          <div class="faq-q" style="font-size:var(--text-sm)">How does this tool work?</div>
+          <div class="faq-a" style="font-size:var(--text-xs)">Paste your text and click the arrow. Our AI processes it and returns the result instantly.</div>
+        </div>
+        <div class="faq-item" style="padding:6px 0;border:none">
+          <div class="faq-q" style="font-size:var(--text-sm)">Is it really free?</div>
+          <div class="faq-a" style="font-size:var(--text-xs)">Yes. No signup required. Up to 5,000 characters per request.</div>
         </div>
       </div>
     </div>
 
-    <!-- Use Cases -->
-    <div class="card section-block" style="padding:var(--space-3)">
-      <h3 style="margin-bottom:var(--space-2)">When to Use This Tool</h3>
-      <ul style="font-size:var(--text-sm);color:var(--text-muted);line-height:var(--leading-base);padding-left:var(--space-2)">
-        {useCases.map(c => <li style="margin-bottom:var(--space-1)">{c}</li>)}
-      </ul>
-    </div>
-
-    <!-- FAQ -->
-    <div class="card section-block" style="padding:var(--space-3)">
-      <h3 style="margin-bottom:var(--space-2)">FAQ</h3>
-      <div class="faq-item">
-        <div class="faq-q">How does this {displayVerb.toLowerCase()} tool work?</div>
-        <div class="faq-a">Paste your text and click "{displayAction} This {contentType}". Our AI analyzes and processes it, returning the result instantly.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">Is it free to use?</div>
-        <div class="faq-a">Yes, completely free. No registration or credit card required. Up to 5,000 characters per request.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">What's the difference between {displayVerb.toLowerCase()} and other tools?</div>
-        <div class="faq-a">Each tool specializes in a specific writing action. {displayVerb} focuses on {verb === 'humanize' ? 'making text sound natural and human-like' : verb === 'rewrite' ? 'completely rewording your text' : verb === 'paraphrase' ? 'rephrasing while keeping meaning identical' : verb === 'summarize' ? 'condensing to key points' : verb === 'improve' ? 'enhancing clarity and flow' : verb === 'expand' ? 'adding depth and detail' : verb === 'shorten' ? 'making text more concise' : verb === 'polish' ? 'fixing grammar and style' : verb === 'formalize' ? 'making text more professional' : 'making text easier to understand'}.</div>
-      </div>
-    </div>
-
     <!-- Related -->
-    <section class="section-block">
-      <h3 style="margin-bottom:var(--space-2)">Related {displayVerb} Tools</h3>
-      <div class="grid-3">
+    <section style="margin-bottom:var(--space-4)">
+      <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-2)">Related {displayVerb} Tools</h3>
+      <div class="grid-4">
         {related.map(p => (
-          <a href={`/${p.slug}`} class="tool-link-card">{p.displayVerb} {p.contentType}</a>
+          <a href={`/${p.slug}`} class="tool-link-card" style="font-size:var(--text-xs);padding:var(--space-1) var(--space-2)">
+            {icon} {p.contentType}
+          </a>
         ))}
       </div>
     </section>
   </main>
 </Layout>
 
+<style>
+  .dual-panel {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    align-items: stretch;
+    margin-bottom: 8px;
+  }
+  .panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-base);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .panel-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+  }
+  .panel-output {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+  }
+  .panel-label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-page);
+  }
+  .panel-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--color-primary);
+    display: inline-block;
+  }
+  .panel-dot-green { background: var(--success); }
+  .panel-textarea {
+    flex: 1;
+    border: none;
+    padding: var(--space-2);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    line-height: var(--leading-base);
+    color: var(--text-body);
+    background: var(--bg-card);
+    resize: none;
+    min-height: 180px;
+    outline: none;
+  }
+  .panel-input .panel-textarea { background: var(--bg-input); }
+  .panel-output-text { white-space: pre-wrap; overflow-y: auto; }
+  .panel-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-page);
+    padding: 0 4px;
+  }
+  .panel-arrow-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid var(--border-base);
+    background: var(--bg-card);
+    color: var(--color-primary);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+  .panel-arrow-btn:hover {
+    background: var(--color-primary); color: #fff; border-color: var(--color-primary);
+  }
+  .panel-arrow-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  @media (max-width: 767px) {
+    .dual-panel { grid-template-columns: 1fr; }
+    .panel-input { border-radius: var(--radius-md); border-right: 1px solid var(--border-base); }
+    .panel-output { border-radius: var(--radius-md); border-left: 1px solid var(--border-base); }
+    .panel-divider { padding: 4px 0; }
+    .panel-arrow-btn { transform: rotate(90deg); }
+    .panel-textarea { min-height: 120px; }
+  }
+</style>
+
 <script>
   const btn = document.getElementById('actionBtn');
   const textarea = document.getElementById('inputText');
-  const resultArea = document.getElementById('resultArea');
   const resultText = document.getElementById('resultText');
-  const copyBtn = document.getElementById('copyBtn');
   const statusBadge = document.getElementById('statusBadge');
   const charCount = document.querySelector('.char-count');
   let isLoading = false;
@@ -112,9 +211,9 @@ const useCases = [
     if (!text || isLoading) return;
     isLoading = true;
     btn.disabled = true;
-    btn.textContent = '⏳ Processing...';
-    resultArea?.classList.add('hidden');
-    statusBadge?.classList.add('hidden');
+    resultText.textContent = '⏳ Processing...';
+    resultText.classList.add('loading');
+    if (statusBadge) statusBadge.style.display = 'none';
     try {
       const res = await fetch('/api/tool', {
         method: 'POST',
@@ -124,30 +223,17 @@ const useCases = [
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'API error');
       resultText.textContent = data.result;
-      resultArea?.classList.remove('hidden');
-      statusBadge.textContent = '✅ Done';
-      statusBadge.className = 'stat-badge success';
-      statusBadge.classList.remove('hidden');
+      if (statusBadge) { statusBadge.textContent = '✅ Done'; statusBadge.style.display = ''; }
     } catch (err) {
       resultText.textContent = 'Error: ' + err.message;
-      resultArea?.classList.remove('hidden');
-      statusBadge.textContent = '⚠️ Error';
-      statusBadge.className = 'stat-badge error';
-      statusBadge.classList.remove('hidden');
+      if (statusBadge) { statusBadge.textContent = '⚠️ Error'; statusBadge.style.display = ''; }
     } finally {
       isLoading = false;
       btn.disabled = false;
-      btn.textContent = btn.textContent.replace('⏳', verb === 'humanize' ? '🤖' : '✨');
     }
   });
 
-  copyBtn?.addEventListener('click', async () => {
-    const text = resultText?.textContent;
-    if (text) {
-      try { await navigator.clipboard.writeText(text); copyBtn.textContent = '✅ Copied!'; setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000); }
-      catch { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); copyBtn.textContent = '✅ Copied!'; setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000); }
-    }
+  textarea?.addEventListener('input', function() {
+    charCount.textContent = this.value.length + ' / 5000 characters';
   });
-
-  textarea?.addEventListener('input', function() { charCount.textContent = this.value.length + ' / 5000'; });
 </script>
