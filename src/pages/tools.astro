@@ -1,0 +1,109 @@
+---
+import Layout from '../layouts/Layout.astro';
+import pages from '../data/programmatic-pages.json';
+
+// Get unique verbs and their counts
+const verbData = {};
+pages.forEach(p => {
+  if (!verbData[p.verb]) verbData[p.verb] = { count: 0, displayVerb: p.displayVerb };
+  verbData[p.verb].count++;
+});
+
+// Get unique content types and their counts
+const typeData = {};
+pages.forEach(p => {
+  if (!typeData[p.contentType]) typeData[p.contentType] = { count: 0 };
+  typeData[p.contentType].count++;
+});
+
+const verbs = Object.entries(verbData);
+const types = Object.entries(typeData);
+---
+
+<Layout title="All Writing Tools — CleverWrite Free AI Toolkit" description="Browse all 458+ AI writing tools. Humanizer, Rewriter, Paraphraser, Summarizer, and more — all free." canonical="/tools">
+  <main class="max-w-4xl mx-auto px-4 py-12">
+    <h1 class="text-4xl font-bold mb-2">All Writing Tools</h1>
+    <p class="text-gray-600 mb-8">458+ free AI writing tools across 10 categories. Pick what you need.</p>
+
+    <!-- Core Tools (Standalone) -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Core Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <a href="/humanizer" class="block p-4 border rounded-xl hover:bg-blue-50 transition bg-white shadow-sm">
+          <div class="text-3xl mb-1">🤖</div>
+          <div class="font-semibold">AI Humanizer</div>
+          <div class="text-xs text-gray-400">Make AI text sound human</div>
+        </a>
+        <a href="/ai-detector" class="block p-4 border rounded-xl hover:bg-purple-50 transition bg-white shadow-sm">
+          <div class="text-3xl mb-1">🔍</div>
+          <div class="font-semibold">AI Detector</div>
+          <div class="text-xs text-gray-400">Detect AI-written content</div>
+        </a>
+        <a href="/grammar-checker" class="block p-4 border rounded-xl hover:bg-emerald-50 transition bg-white shadow-sm">
+          <div class="text-3xl mb-1">✨</div>
+          <div class="font-semibold">Grammar Checker</div>
+          <div class="text-xs text-gray-400">Fix grammar & style</div>
+        </a>
+        <a href="/paraphraser" class="block p-4 border rounded-xl hover:bg-purple-50 transition bg-white shadow-sm">
+          <div class="text-3xl mb-1">🔄</div>
+          <div class="font-semibold">Paraphraser</div>
+          <div class="text-xs text-gray-400">Rephrase any text</div>
+        </a>
+        <a href="/summarizer" class="block p-4 border rounded-xl hover:bg-amber-50 transition bg-white shadow-sm">
+          <div class="text-3xl mb-1">📝</div>
+          <div class="font-semibold">Summarizer</div>
+          <div class="text-xs text-gray-400">Condense long text</div>
+        </a>
+        <a href="/improver" class="block p-4 border rounded-xl hover:bg-teal-50 transition bg-white shadow-sm">
+          <div class="text-3xl mb-1">⬆️</div>
+          <div class="font-semibold">Text Improver</div>
+          <div class="text-xs text-gray-400">Enhance clarity & flow</div>
+        </a>
+        <a href="/expander" class="block p-4 border rounded-xl hover:bg-sky-50 transition bg-white shadow-sm">
+          <div class="text-3xl mb-1">🔍</div>
+          <div class="font-semibold">Text Expander</div>
+          <div class="text-xs text-gray-400">Add depth & detail</div>
+        </a>
+        <a href="/shortener" class="block p-4 border rounded-xl hover:bg-rose-50 transition bg-white shadow-sm">
+          <div class="text-3xl mb-1">✂️</div>
+          <div class="font-semibold">Text Shortener</div>
+          <div class="text-xs text-gray-400">Make text concise</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- By Verb -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">By Action</h2>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+        {verbs.sort().map(([v, d]) => (
+          <div class="border rounded-lg p-3 bg-white shadow-sm">
+            <div class="font-semibold text-sm">{d.displayVerb}</div>
+            <div class="text-xs text-gray-400 mb-2">{d.count} pages</div>
+            <div class="space-y-1 max-h-24 overflow-y-auto">
+              {pages.filter(p => p.verb === v).slice(0, 5).map(p => (
+                <a href={`/${p.slug}`} class="block text-xs text-blue-600 hover:underline truncate">
+                  {p.contentType}
+                </a>
+              ))}
+            </div>
+            <a href={`/tools?verb=${v}`} class="block text-xs text-blue-600 hover:underline mt-1">View all →</a>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- By Content Type -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">By Content Type</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {types.sort().slice(0, 20).map(([t, d]) => (
+          <div class="border rounded-lg p-3 bg-white shadow-sm">
+            <div class="font-semibold text-sm">{t}</div>
+            <div class="text-xs text-gray-400">{d.count} tools</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+</Layout>

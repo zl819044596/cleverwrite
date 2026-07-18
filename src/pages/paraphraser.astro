@@ -1,0 +1,90 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Free Paraphraser — Rephrase Any Text | CleverWrite" description="Paraphrase any text for free. Reword sentences, avoid plagiarism, and improve clarity." canonical="/paraphraser">
+  <main class="max-w-3xl mx-auto px-4 py-12">
+    <section class="text-center mb-8">
+      <h1 class="text-4xl font-bold mb-2">Free Paraphraser</h1>
+      <p class="text-gray-600">Rephrase any text to express the same ideas in new words. Perfect for avoiding plagiarism and improving clarity.</p>
+    </section>
+
+    <section class="bg-white rounded-xl shadow-lg p-6 mb-8">
+      <textarea id="inputText" class="w-full h-48 border border-gray-300 rounded-lg p-4 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none" placeholder="Paste text to paraphrase..."></textarea>
+      <div class="flex justify-between items-center mt-4">
+        <span class="text-sm text-gray-400 char-count">0 / 5000 characters</span>
+        <button id="actionBtn" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition disabled:opacity-50">🔄 Paraphrase Text</button>
+      </div>
+      <div id="resultArea" class="mt-6 hidden">
+        <h3 class="font-semibold mb-2">Paraphrased Text</h3>
+        <div id="resultText" class="bg-gray-50 border rounded-lg p-4 min-h-[100px] whitespace-pre-wrap"></div>
+        <div class="flex gap-3 mt-3">
+          <button id="copyBtn" class="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 transition">📋 Copy</button>
+          <span id="statusBadge" class="inline-flex items-center gap-1 text-green-600 text-sm">✅ Done</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t pt-8">
+      <h2 class="text-xl font-semibold mb-4">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <a href="/humanizer" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🤖 AI Humanizer</a>
+        <a href="/summarizer" class="block p-3 border rounded-lg hover:bg-gray-50 transition">📝 Summarizer</a>
+        <a href="/grammar-checker" class="block p-3 border rounded-lg hover:bg-gray-50 transition">✨ Grammar Checker</a>
+        <a href="/rewrite-essay" class="block p-3 border rounded-lg hover:bg-gray-50 transition">✏️ Rewrite Essay</a>
+        <a href="/improve-article" class="block p-3 border rounded-lg hover:bg-gray-50 transition">⬆️ Improve Article</a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  const btn = document.getElementById('actionBtn');
+  const textarea = document.getElementById('inputText');
+  const resultArea = document.getElementById('resultArea');
+  const resultText = document.getElementById('resultText');
+  const copyBtn = document.getElementById('copyBtn');
+  const statusBadge = document.getElementById('statusBadge');
+  const charCount = document.querySelector('.char-count');
+  let isLoading = false;
+
+  btn?.addEventListener('click', async () => {
+    const text = textarea?.value.trim();
+    if (!text || isLoading) return;
+    isLoading = true;
+    btn.disabled = true;
+    btn.textContent = '⏳ Paraphrasing...';
+    resultArea?.classList.add('hidden');
+    try {
+      const res = await fetch('/api/tool', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, verb: 'paraphrase' })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'API error');
+      resultText.textContent = data.result;
+      resultArea?.classList.remove('hidden');
+      statusBadge.textContent = '✅ Done';
+    } catch (err) {
+      resultText.textContent = 'Error: ' + err.message + '\n\nPlease try again.';
+      resultArea?.classList.remove('hidden');
+      statusBadge.textContent = '⚠️ Error';
+      statusBadge.className = 'inline-flex items-center gap-1 text-red-600 text-sm';
+    } finally {
+      isLoading = false;
+      btn.disabled = false;
+      btn.textContent = '🔄 Paraphrase Text';
+    }
+  });
+
+  copyBtn?.addEventListener('click', async () => {
+    const text = resultText?.textContent;
+    if (text) {
+      try { await navigator.clipboard.writeText(text); copyBtn.textContent = '✅ Copied!'; setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000); }
+      catch { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); copyBtn.textContent = '✅ Copied!'; setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000); }
+    }
+  });
+
+  textarea?.addEventListener('input', function() { charCount.textContent = this.value.length + ' / 5000 characters'; });
+</script>

@@ -8,33 +8,170 @@ import ToolCard from '../components/ToolCard.astro';
     <!-- Hero -->
     <section class="text-center mb-16">
       <h1 class="text-5xl font-bold mb-4">CleverWrite</h1>
-      <p class="text-xl text-gray-600 mb-8">The most complete free AI writing toolkit</p>
-      <a href="/humanizer" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition">
-        Try AI Humanizer Free →
-      </a>
+      <p class="text-xl text-gray-600 mb-8">The most complete free AI writing toolkit — 460+ pages & 10 writing tools</p>
+      <div class="flex gap-4 justify-center">
+        <a href="/humanizer" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition">
+          Try AI Humanizer Free →
+        </a>
+        <a href="/grammar-checker" class="inline-block bg-emerald-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-emerald-700 transition">
+          Check Grammar →
+        </a>
+      </div>
     </section>
 
-    <!-- Tools Grid -->
+    <!-- Core Tools -->
     <section class="mb-16">
-      <h2 class="text-2xl font-semibold mb-6">All Tools</h2>
+      <h2 class="text-2xl font-semibold mb-6">Core Tools</h2>
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
         <ToolCard href="/humanizer" name="AI Humanizer" desc="Make AI text sound human" />
         <ToolCard href="/ai-detector" name="AI Detector" desc="Detect AI-written content" />
-        <ToolCard href="/grammar-checker" name="Grammar Checker" desc="Fix grammar & style" comingSoon />
-        <ToolCard href="/paraphraser" name="Paraphraser" desc="Rewrite any text" comingSoon />
-        <ToolCard href="/summarizer" name="Summarizer" desc="Summarize long content" comingSoon />
-        <ToolCard href="/translator" name="Translator" desc="Translate between languages" comingSoon />
-        <ToolCard href="/humanize-essay" name="Essay Humanizer" desc="Humanize essays, papers & more" />
-        <ToolCard href="/humanize-email" name="Email Humanizer" desc="Humanize emails" />
-        <ToolCard href="/humanize-linkedin-post" name="LinkedIn Humanizer" desc="Humanize LinkedIn posts" />
+        <ToolCard href="/grammar-checker" name="Grammar Checker" desc="Fix grammar & style" />
+        <ToolCard href="/paraphraser" name="Paraphraser" desc="Rewrite any text" />
+        <ToolCard href="/summarizer" name="Summarizer" desc="Summarize long content" />
+        <ToolCard href="/improver" name="Text Improver" desc="Enhance clarity & flow" />
+        <ToolCard href="/expander" name="Text Expander" desc="Make text longer" />
+        <ToolCard href="/shortener" name="Text Shortener" desc="Make text concise" />
+        <ToolCard href="/polish-email" name="Polish Email" desc="Polish email writing" />
+        <ToolCard href="/simplify-text" name="Simplify Text" desc="Plain language" />
+        <ToolCard href="/formalize-text" name="Formalize Text" desc="Professional tone" />
+        <ToolCard href="/rewrite-essay" name="Rewrite Essay" desc="Rewrite essays" />
       </div>
+    </section>
+
+    <!-- By Content Type -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-semibold mb-6">By Content Type</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <a href="/humanize-essay" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">📄</div>
+          <div class="font-medium text-sm">Essay</div>
+          <div class="text-xs text-gray-400">10 tools</div>
+        </a>
+        <a href="/rewrite-email" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">✉️</div>
+          <div class="font-medium text-sm">Email</div>
+          <div class="text-xs text-gray-400">9 tools</div>
+        </a>
+        <a href="/improve-blog-post" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">📝</div>
+          <div class="font-medium text-sm">Blog Post</div>
+          <div class="text-xs text-gray-400">8 tools</div>
+        </a>
+        <a href="/summarize-research-paper" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">🔬</div>
+          <div class="font-medium text-sm">Research</div>
+          <div class="text-xs text-gray-400">8 tools</div>
+        </a>
+        <a href="/paraphrase-cover-letter" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">📋</div>
+          <div class="font-medium text-sm">Cover Letter</div>
+          <div class="text-xs text-gray-400">8 tools</div>
+        </a>
+        <a href="/polish-linkedin-post" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">💼</div>
+          <div class="font-medium text-sm">LinkedIn</div>
+          <div class="text-xs text-gray-400">8 tools</div>
+        </a>
+        <a href="/expand-story" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">📖</div>
+          <div class="font-medium text-sm">Story</div>
+          <div class="text-xs text-gray-400">6 tools</div>
+        </a>
+        <a href="/simplify-homework" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">🎒</div>
+          <div class="font-medium text-sm">Homework</div>
+          <div class="text-xs text-gray-400">9 tools</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- By Action -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-semibold mb-6">By Action</h2>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <a href="/tools?verb=humanize" class="block p-4 border rounded-lg bg-blue-50 hover:bg-blue-100 transition text-center">
+          <div class="text-2xl mb-1">🤖</div>
+          <div class="font-medium text-sm">Humanize</div>
+          <div class="text-xs text-gray-400">57 pages</div>
+        </a>
+        <a href="/tools?verb=rewrite" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">✏️</div>
+          <div class="font-medium text-sm">Rewrite</div>
+          <div class="text-xs text-gray-400">57 pages</div>
+        </a>
+        <a href="/tools?verb=paraphrase" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">🔄</div>
+          <div class="font-medium text-sm">Paraphrase</div>
+          <div class="text-xs text-gray-400">57 pages</div>
+        </a>
+        <a href="/tools?verb=summarize" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">📝</div>
+          <div class="font-medium text-sm">Summarize</div>
+          <div class="text-xs text-gray-400">40 pages</div>
+        </a>
+        <a href="/tools?verb=improve" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">⬆️</div>
+          <div class="font-medium text-sm">Improve</div>
+          <div class="text-xs text-gray-400">57 pages</div>
+        </a>
+        <a href="/tools?verb=expand" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">🔍</div>
+          <div class="font-medium text-sm">Expand</div>
+          <div class="text-xs text-gray-400">40 pages</div>
+        </a>
+        <a href="/tools?verb=shorten" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">✂️</div>
+          <div class="font-medium text-sm">Shorten</div>
+          <div class="text-xs text-gray-400">40 pages</div>
+        </a>
+        <a href="/tools?verb=polish" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">✨</div>
+          <div class="font-medium text-sm">Polish</div>
+          <div class="text-xs text-gray-400">57 pages</div>
+        </a>
+        <a href="/tools?verb=formalize" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">👔</div>
+          <div class="font-medium text-sm">Formalize</div>
+          <div class="text-xs text-gray-400">19 pages</div>
+        </a>
+        <a href="/tools?verb=simplify" class="block p-4 border rounded-lg hover:bg-gray-50 transition text-center">
+          <div class="text-2xl mb-1">📖</div>
+          <div class="font-medium text-sm">Simplify</div>
+          <div class="text-xs text-gray-400">34 pages</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Top Programmatic -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-semibold mb-6">Popular Pages</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+        <a href="/humanize-chatgpt" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">🤖 Humanize ChatGPT</a>
+        <a href="/humanize-essay" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">📄 Humanize Essay</a>
+        <a href="/rewrite-resume" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">✏️ Rewrite Resume</a>
+        <a href="/paraphrase-essay" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">🔄 Paraphrase Essay</a>
+        <a href="/summarize-article" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">📝 Summarize Article</a>
+        <a href="/improve-email" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">⬆️ Improve Email</a>
+        <a href="/expand-blog-post" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">🔍 Expand Blog Post</a>
+        <a href="/shorten-essay" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">✂️ Shorten Essay</a>
+        <a href="/polish-email" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">✨ Polish Email</a>
+        <a href="/formalize-email" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">👔 Formalize Email</a>
+        <a href="/simplify-essay" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">📖 Simplify Essay</a>
+        <a href="/humanize-resume" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">🤖 Humanize Resume</a>
+        <a href="/rewrite-cover-letter" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">✏️ Rewrite Cover Letter</a>
+        <a href="/paraphrase-research-paper" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">🔄 Paraphrase Paper</a>
+        <a href="/summarize-youtube-script" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">📝 Summarize Script</a>
+        <a href="/humanize-linkedin-post" class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">💼 Humanize LinkedIn</a>
+      </div>
+      <div class="text-center mt-4">
+        <a href="/tools" class="text-blue-600 hover:underline text-sm">Browse all 458 pages →</a>
+      </div>
+    </section>
+
+    <!-- SEO Text -->
+    <section class="border-t pt-8 text-gray-600 text-sm max-w-2xl mx-auto">
+      <h2 class="text-lg font-semibold text-gray-800 mb-2">The Most Complete Free AI Writing Toolkit</h2>
+      <p>CleverWrite offers 10 powerful AI writing tools — Humanizer, Rewriter, Paraphraser, Summarizer, Improver, Expander, Shortener, Polisher, Formalizer, and Simplifier — across 458+ content-specific pages. Whether you need to <a href="/humanize-essay" class="text-blue-600 hover:underline">humanize an essay</a>, <a href="/rewrite-email" class="text-blue-600 hover:underline">rewrite an email</a>, <a href="/paraphrase-research-paper" class="text-blue-600 hover:underline">paraphrase a research paper</a>, or <a href="/summarize-article" class="text-blue-600 hover:underline">summarize an article</a>, we've got the right tool for the job. All free, no registration required.</p>
     </section>
   </main>
 </Layout>
-
-<style>
-  .coming-soon {
-    opacity: 0.6;
-    pointer-events: none;
-  }
-</style>
