@@ -1,144 +1,293 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import pages from '../data/programmatic-pages.json';
-
-// Get unique verbs
-const verbMap = {};
-pages.forEach(p => {
-  if (!verbMap[p.verb]) verbMap[p.verb] = { verb: p.verb, displayVerb: p.displayVerb, count: 0 };
-  verbMap[p.verb].count++;
-});
-const verbs = Object.values(verbMap).sort((a, b) => b.count - a.count);
-
-// Content type groups
-const typeGroups = [
-  { name: 'Essay', icon: '📄', slug: 'humanize-essay', count: 10 },
-  { name: 'Email', icon: '✉️', slug: 'rewrite-email', count: 9 },
-  { name: 'Blog Post', icon: '📝', slug: 'improve-blog-post', count: 8 },
-  { name: 'Research', icon: '🔬', slug: 'summarize-research-paper', count: 8 },
-  { name: 'Cover Letter', icon: '📋', slug: 'paraphrase-cover-letter', count: 8 },
-  { name: 'LinkedIn', icon: '💼', slug: 'polish-linkedin-post', count: 8 },
-  { name: 'Story', icon: '📖', slug: 'expand-story', count: 6 },
-  { name: 'Homework', icon: '🎒', slug: 'simplify-homework', count: 9 },
-];
-
-const popularPages = [
-  { slug: 'humanize-chatgpt', label: 'Humanize ChatGPT' },
-  { slug: 'humanize-essay', label: 'Humanize Essay' },
-  { slug: 'rewrite-resume', label: 'Rewrite Resume' },
-  { slug: 'paraphrase-essay', label: 'Paraphrase Essay' },
-  { slug: 'summarize-article', label: 'Summarize Article' },
-  { slug: 'improve-email', label: 'Improve Email' },
-  { slug: 'expand-blog-post', label: 'Expand Blog Post' },
-  { slug: 'shorten-essay', label: 'Shorten Essay' },
-  { slug: 'polish-email', label: 'Polish Email' },
-  { slug: 'formalize-email', label: 'Formalize Email' },
-  { slug: 'simplify-essay', label: 'Simplify Essay' },
-  { slug: 'humanize-resume', label: 'Humanize Resume' },
-  { slug: 'rewrite-cover-letter', label: 'Rewrite Cover Letter' },
-  { slug: 'paraphrase-research-paper', label: 'Paraphrase Paper' },
-  { slug: 'summarize-youtube-script', label: 'Summarize Script' },
-  { slug: 'humanize-linkedin-post', label: 'Humanize LinkedIn' },
-];
 ---
 
-<Layout title="CleverWrite — Free AI Writing Toolkit" description="The most complete free AI writing toolkit — 460+ pages & 10 writing tools. Humanizer, Grammar Checker, Paraphraser & more." canonical="/">
-  <!-- Hero with dual panel -->
-  <section class="hero">
-    <h1>Free AI Writing Toolkit</h1>
-    <p>Humanizer, Grammar Checker, Paraphraser, Summarizer & more — all free, no signup.</p>
-    <div class="hero-actions">
-      <a href="/humanizer" class="btn-primary">🤖 Try AI Humanizer</a>
-      <a href="/grammar-checker" class="btn-secondary">✨ Check Grammar</a>
+<Layout title="CleverWrite — Free AI Humanizer & Writing Tools" description="Free AI Humanizer for essays, scripts & content. Rewrite AI text into natural writing while keeping your original meaning." canonical="/">
+  <!-- Dual-panel Hero -->
+  <section class="hero-dual">
+    <div class="hero-dual-inner">
+      <h1 class="hero-dual-title">Free AI Humanizer<br>for Essays, Scripts &amp; Content</h1>
+      <p class="hero-dual-sub">Rewrite AI text into natural writing while keeping your original meaning</p>
+
+      <div class="dual-panel">
+        <div class="panel panel-input">
+          <div class="panel-label">
+            <span class="panel-dot"></span>
+            Original AI Text
+          </div>
+          <textarea id="heroInput" class="panel-textarea" placeholder="Paste your AI-generated text here...">The integration of artificial intelligence into modern educational frameworks has fundamentally transformed the pedagogical landscape, enabling unprecedented levels of personalized learning experiences for students across diverse academic disciplines.</textarea>
+        </div>
+
+        <div class="panel-divider">
+          <button id="heroHumanizeBtn" class="panel-arrow-btn" title="Humanize">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+
+        <div class="panel panel-output">
+          <div class="panel-label">
+            <span class="panel-dot panel-dot-green"></span>
+            Humanized Writing
+          </div>
+          <div id="heroOutput" class="panel-textarea panel-output-text" style="color:var(--text-muted)">
+            <span style="opacity:0.5">Click the arrow to humanize...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature badges -->
+      <div class="hero-badges">
+        <a href="/humanizer" class="badge-link active">🤖 Humanize Text</a>
+        <a href="/ai-detector" class="badge-link">🔍 AI Detector</a>
+        <a href="/grammar-checker" class="badge-link">✨ Check Grammar</a>
+        <a href="/paraphraser" class="badge-link">🔄 Paraphraser</a>
+        <a href="/summarizer" class="badge-link">📝 Summarizer</a>
+      </div>
     </div>
   </section>
 
-  <main class="container section-block">
-    <!-- Core Tools -->
+  <!-- Minimal below-fold: just core tools -->
+  <main class="container" style="padding-bottom:var(--space-5)">
     <section class="section-block">
-      <h2 class="section-title">Core Tools</h2>
-      <p class="section-subtitle">Professional AI writing tools, free for everyone.</p>
-      <div class="grid-3">
+      <div class="grid-4">
         <a href="/humanizer" class="card"><h3>🤖 AI Humanizer</h3><p style="font-size:var(--text-sm);color:var(--text-muted);margin-top:4px">Make AI text sound human</p></a>
         <a href="/ai-detector" class="card"><h3>🔍 AI Detector</h3><p style="font-size:var(--text-sm);color:var(--text-muted);margin-top:4px">Detect AI-written content</p></a>
         <a href="/grammar-checker" class="card"><h3>✨ Grammar Checker</h3><p style="font-size:var(--text-sm);color:var(--text-muted);margin-top:4px">Fix grammar & style</p></a>
-        <a href="/paraphraser" class="card"><h3>🔄 Paraphraser</h3><p style="font-size:var(--text-sm);color:var(--text-muted);margin-top:4px">Rewrite any text in new words</p></a>
+        <a href="/paraphraser" class="card"><h3>🔄 Paraphraser</h3><p style="font-size:var(--text-sm);color:var(--text-muted);margin-top:4px">Rewrite any text</p></a>
         <a href="/summarizer" class="card"><h3>📝 Summarizer</h3><p style="font-size:var(--text-sm);color:var(--text-muted);margin-top:4px">Condense long content</p></a>
         <a href="/improver" class="card"><h3>⬆️ Text Improver</h3><p style="font-size:var(--text-sm);color:var(--text-muted);margin-top:4px">Enhance clarity & flow</p></a>
         <a href="/expander" class="card"><h3>🔍 Text Expander</h3><p style="font-size:var(--text-sm);color:var(--text-muted);margin-top:4px">Add depth & detail</p></a>
-        <a href="/shortener" class="card"><h3>✂️ Text Shortener</h3><p style="font-size:var(--text-sm);color:var(--text-muted);margin-top:4px">Make text concise</p></a>
-        <a href="/polish-email" class="card"><h3>✨ Polish Email</h3><p style="font-size:var(--text-sm);color:var(--text-muted);margin-top:4px">Polish email writing</p></a>
-        <a href="/simplify-text" class="card"><h3>📖 Simplify Text</h3><p style="font-size:var(--text-sm);color:var(--text-muted);margin-top:4px">Plain language, easy reading</p></a>
-        <a href="/formalize-text" class="card"><h3>👔 Formalize Text</h3><p style="font-size:var(--text-sm);color:var(--text-muted);margin-top:4px">Professional tone</p></a>
         <a href="/tools" class="card" style="display:flex;align-items:center;justify-content:center;border:1px dashed var(--border-base)">
-          <span style="color:var(--color-primary);font-weight:500">View All 458 Pages →</span>
+          <span style="color:var(--color-primary);font-weight:500">+ 450 more pages →</span>
         </a>
-      </div>
-    </section>
-
-    <!-- By Content Type -->
-    <section class="section-block">
-      <h2 class="section-title">By Content Type</h2>
-      <p class="section-subtitle">Pick what you're writing, we have the right tool.</p>
-      <div class="grid-4">
-        {typeGroups.map(t => (
-          <a href={`/${t.slug}`} class="type-card">
-            <div class="icon">{t.icon}</div>
-            <div class="name">{t.name}</div>
-            <div class="count">{t.count} tools</div>
-          </a>
-        ))}
-      </div>
-    </section>
-
-    <!-- By Action -->
-    <section class="section-block">
-      <h2 class="section-title">By Action</h2>
-      <p class="section-subtitle">Choose what you want to do with your text.</p>
-      <div class="grid-2" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--space-2)">
-        {verbs.map(v => (
-          <a href={`/tools?verb=${v.verb}`} class="tool-link-card" style="text-align:center">
-            <div style="font-weight:600;font-size:var(--text-sm)">{v.displayVerb}</div>
-            <div style="font-size:var(--text-xs);color:var(--text-muted)">{v.count} pages</div>
-          </a>
-        ))}
-      </div>
-    </section>
-
-    <!-- Popular Pages -->
-    <section class="section-block">
-      <h2 class="section-title">Popular Pages</h2>
-      <div class="grid-4">
-        {popularPages.map(p => (
-          <a href={`/${p.slug}`} class="tool-link-card">{p.label}</a>
-        ))}
-      </div>
-      <div class="text-center mt-3">
-        <a href="/tools" class="btn-secondary">Browse all 458 pages →</a>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="section-block">
-      <h2 class="section-title">Frequently Asked Questions</h2>
-      <div class="card" style="padding:var(--space-3)">
-        <div class="faq-item">
-          <div class="faq-q">Is CleverWrite really free?</div>
-          <div class="faq-a">Yes. All core tools are free with no registration required. Use up to 5,000 characters per request.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">How does the AI Humanizer work?</div>
-          <div class="faq-a">AI Humanizer rewrites AI-generated text to sound naturally human-written. It removes AI patterns, varies sentence structure, and adds natural language.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">Do you store my text?</div>
-          <div class="faq-a">No. Your text is processed in real-time and never stored on our servers.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">Which content types do you support?</div>
-          <div class="faq-a">Over 50 content types across academic, professional, email, social media, content marketing, creative, and web writing.</div>
-        </div>
       </div>
     </section>
   </main>
 </Layout>
+
+<style>
+  /* Dual-panel hero */
+  .hero-dual {
+    background: var(--bg-page);
+    border-bottom: 1px solid var(--border-light);
+    padding: var(--space-3) var(--space-2) var(--space-4);
+  }
+  .hero-dual-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .hero-dual-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-title);
+    line-height: 1.3;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .hero-dual-sub {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: var(--space-3);
+  }
+
+  /* Dual panel */
+  .dual-panel {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    align-items: stretch;
+    margin-bottom: var(--space-3);
+  }
+
+  .panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-base);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .panel-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+  }
+  .panel-output {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+  }
+
+  .panel-label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-page);
+  }
+  .panel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    display: inline-block;
+  }
+  .panel-dot-green {
+    background: var(--success);
+  }
+
+  .panel-textarea {
+    flex: 1;
+    border: none;
+    padding: var(--space-2);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    line-height: var(--leading-base);
+    color: var(--text-body);
+    background: var(--bg-card);
+    resize: none;
+    min-height: 200px;
+    outline: none;
+  }
+  .panel-input .panel-textarea {
+    background: var(--bg-input);
+  }
+  .panel-output-text {
+    white-space: pre-wrap;
+    overflow-y: auto;
+  }
+  .panel-output-text.loading {
+    opacity: 0.5;
+  }
+
+  /* Divider with arrow */
+  .panel-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-page);
+    padding: 0 4px;
+  }
+  .panel-arrow-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border-base);
+    background: var(--bg-card);
+    color: var(--color-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+  .panel-arrow-btn:hover {
+    background: var(--color-primary);
+    color: #ffffff;
+    border-color: var(--color-primary);
+  }
+  .panel-arrow-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Badges */
+  .hero-badges {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .badge-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 1px solid var(--border-base);
+    transition: all 0.2s ease;
+  }
+  .badge-link:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary-fade);
+    background: var(--color-primary-fade);
+  }
+  .badge-link.active {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background: var(--color-primary-fade);
+  }
+
+  @media (max-width: 767px) {
+    .dual-panel {
+      grid-template-columns: 1fr;
+    }
+    .panel-input {
+      border-radius: var(--radius-md);
+      border-right: 1px solid var(--border-base);
+      border-bottom: none;
+    }
+    .panel-output {
+      border-radius: var(--radius-md);
+      border-left: 1px solid var(--border-base);
+      border-top: none;
+    }
+    .panel-divider {
+      padding: 4px 0;
+    }
+    .panel-arrow-btn {
+      transform: rotate(90deg);
+    }
+    .hero-dual-title {
+      font-size: 22px;
+    }
+    .panel-textarea {
+      min-height: 140px;
+    }
+  }
+</style>
+
+<script>
+  const heroInput = document.getElementById('heroInput');
+  const heroOutput = document.getElementById('heroOutput');
+  const heroBtn = document.getElementById('heroHumanizeBtn');
+  let isLoading = false;
+
+  heroBtn?.addEventListener('click', async () => {
+    const text = heroInput?.value.trim();
+    if (!text || isLoading) return;
+
+    isLoading = true;
+    heroBtn.disabled = true;
+    heroOutput.textContent = '⏳ Humanizing...';
+    heroOutput.classList.add('loading');
+
+    try {
+      const res = await fetch('/api/humanize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, tone: 'casual' })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'API error');
+      heroOutput.textContent = data.result;
+      heroOutput.classList.remove('loading');
+    } catch (err) {
+      heroOutput.textContent = 'Error: ' + err.message;
+      heroOutput.classList.remove('loading');
+    } finally {
+      isLoading = false;
+      heroBtn.disabled = false;
+    }
+  });
+</script>
