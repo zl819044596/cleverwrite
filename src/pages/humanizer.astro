@@ -58,22 +58,73 @@ import Layout from '../layouts/Layout.astro';
   </main>
 </Layout>
 
-<script>
-  // Tool interactivity will be implemented in Phase 1
-  document.getElementById('humanizeBtn')?.addEventListener('click', () => {
-    const textarea = document.querySelector('textarea');
-    if (textarea?.value.trim()) {
-      document.getElementById('resultArea')?.classList.remove('hidden');
-      document.getElementById('resultText').textContent = textarea.value + '\n\n[Humanized version will appear here — LLM integration coming soon]';
+|<script>
+  const humanizeBtn = document.getElementById('humanizeBtn');
+  const textarea = document.querySelector('textarea');
+  const resultArea = document.getElementById('resultArea');
+  const resultText = document.getElementById('resultText');
+  const copyBtn = document.getElementById('copyBtn');
+  const detectionStatus = document.getElementById('detectionStatus');
+  const charCount = document.getElementById('charCount');
+  let isLoading = false;
+
+  humanizeBtn?.addEventListener('click', async () => {
+    const text = textarea?.value.trim();
+    if (!text || isLoading) return;
+
+    isLoading = true;
+    humanizeBtn.disabled = true;
+    humanizeBtn.textContent = '⏳ Humanizing...';
+    resultArea?.classList.add('hidden');
+
+    try {
+      const res = await fetch('/api/humanize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, tone: 'casual' })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'API error');
+
+      resultText.textContent = data.result;
+      resultArea?.classList.remove('hidden');
+      copyBtn.textContent = '📋 Copy';
+    } catch (err) {
+      resultText.textContent = 'Error: ' + err.message + '\n\nPlease try again.';
+      resultArea?.classList.remove('hidden');
+      detectionStatus.textContent = '⚠️ Error';
+      detectionStatus.className = 'inline-flex items-center gap-1 text-red-600 text-sm';
+    } finally {
+      isLoading = false;
+      humanizeBtn.disabled = false;
+      humanizeBtn.textContent = '✨ Humanize My Text';
     }
   });
 
-  document.getElementById('copyBtn')?.addEventListener('click', () => {
-    const text = document.getElementById('resultText')?.textContent;
-    if (text) navigator.clipboard.writeText(text);
+  copyBtn?.addEventListener('click', async () => {
+    const text = resultText?.textContent;
+    if (text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = '✅ Copied!';
+        setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
+      } catch {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        copyBtn.textContent = '✅ Copied!';
+        setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
+      }
+    }
   });
 
-  document.querySelector('textarea')?.addEventListener('input', function() {
-    document.getElementById('charCount').textContent = this.value.length + ' characters';
+  textarea?.addEventListener('input', function() {
+    charCount.textContent = this.value.length + ' / 5000 characters';
   });
 </script>
