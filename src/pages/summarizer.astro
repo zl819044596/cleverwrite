@@ -3,36 +3,38 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Free Summarizer — Condense Any Text | CleverWrite" description="Summarize any text to its key points. Save time reading long articles, papers, and documents." canonical="/summarizer">
-  <main class="max-w-3xl mx-auto px-4 py-12">
-    <section class="text-center mb-8">
-      <h1 class="text-4xl font-bold mb-2">Free Summarizer</h1>
-      <p class="text-gray-600">Condense any text to its key points. Save time reading long articles, research papers, and documents.</p>
+  <main class="container section-block" style="padding-top:var(--space-3)">
+    <section class="hero" style="padding:var(--space-3) 0">
+      <h1>Free Summarizer</h1>
+      <p>Condense any text to its key points. Save time reading long articles, research papers, and documents.</p>
     </section>
 
-    <section class="bg-white rounded-xl shadow-lg p-6 mb-8">
-      <textarea id="inputText" class="w-full h-48 border border-gray-300 rounded-lg p-4 text-base focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none" placeholder="Paste long text to summarize..."></textarea>
-      <div class="flex justify-between items-center mt-4">
-        <span class="text-sm text-gray-400 char-count">0 / 5000 characters</span>
-        <button id="actionBtn" class="bg-amber-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-amber-700 transition disabled:opacity-50">📝 Summarize Text</button>
+    <!-- Tool -->
+    <div class="tool-panel">
+      <textarea id="inputText" class="text-input" style="min-height:220px" placeholder="Paste long text to summarize..."></textarea>
+      <div class="flex justify-between items-center mt-2">
+        <span style="font-size:var(--text-xs);color:var(--text-muted)" id="charCount">0 / 5000</span>
+        <button id="actionBtn" class="btn-primary">📝 Summarize Text</button>
       </div>
-      <div id="resultArea" class="mt-6 hidden">
-        <h3 class="font-semibold mb-2">Summary</h3>
-        <div id="resultText" class="bg-gray-50 border rounded-lg p-4 min-h-[80px] whitespace-pre-wrap"></div>
-        <div class="flex gap-3 mt-3">
-          <button id="copyBtn" class="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 transition">📋 Copy</button>
-          <span id="statusBadge" class="inline-flex items-center gap-1 text-green-600 text-sm">✅ Done</span>
+      <div id="resultArea" class="mt-3 hidden">
+        <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Summary</h3>
+        <div id="resultText" class="result-box"></div>
+        <div class="flex gap-1 mt-2 items-center">
+          <button id="copyBtn" class="btn-secondary">📋 Copy</button>
+          <span id="statusBadge" style="font-size:var(--text-xs);color:var(--text-success)" class="hidden">✅ Done</span>
         </div>
       </div>
-    </section>
+    </div>
 
-    <section class="border-t pt-8">
-      <h2 class="text-xl font-semibold mb-4">Related Tools</h2>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <a href="/paraphraser" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🔄 Paraphraser</a>
-        <a href="/shorten-article" class="block p-3 border rounded-lg hover:bg-gray-50 transition">✂️ Shorten Article</a>
-        <a href="/expand-essay" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🔍 Expand Essay</a>
-        <a href="/summarize-research-paper" class="block p-3 border rounded-lg hover:bg-gray-50 transition">📝 Summarize Research Paper</a>
-        <a href="/humanizer" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🤖 AI Humanizer</a>
+    <!-- Related -->
+    <section class="section-block">
+      <h3 style="margin-bottom:var(--space-2)">Related Tools</h3>
+      <div class="grid-3">
+        <a href="/paraphraser" class="tool-link-card">🔄 Paraphraser</a>
+        <a href="/shorten-article" class="tool-link-card">✂️ Shorten Article</a>
+        <a href="/expand-essay" class="tool-link-card">🔍 Expand Essay</a>
+        <a href="/summarize-research-paper" class="tool-link-card">📝 Summarize Research Paper</a>
+        <a href="/humanizer" class="tool-link-card">🤖 AI Humanizer</a>
       </div>
     </section>
   </main>
@@ -45,7 +47,7 @@ import Layout from '../layouts/Layout.astro';
   const resultText = document.getElementById('resultText');
   const copyBtn = document.getElementById('copyBtn');
   const statusBadge = document.getElementById('statusBadge');
-  const charCount = document.querySelector('.char-count');
+  const charCount = document.getElementById('charCount');
   let isLoading = false;
   btn?.addEventListener('click', async () => {
     const text = textarea?.value.trim();
@@ -54,6 +56,7 @@ import Layout from '../layouts/Layout.astro';
     btn.disabled = true;
     btn.textContent = '⏳ Summarizing...';
     resultArea?.classList.add('hidden');
+    statusBadge?.classList.add('hidden');
     try {
       const res = await fetch('/api/tool', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, verb: 'summarize' }) });
       const data = await res.json();
@@ -61,11 +64,15 @@ import Layout from '../layouts/Layout.astro';
       resultText.textContent = data.result;
       resultArea?.classList.remove('hidden');
       statusBadge.textContent = '✅ Done';
+      statusBadge.className = '';
+      statusBadge.style.cssText = 'font-size:var(--text-xs);color:var(--text-success)';
+      statusBadge?.classList.remove('hidden');
     } catch (err) {
       resultText.textContent = 'Error: ' + err.message + '\n\nPlease try again.';
       resultArea?.classList.remove('hidden');
       statusBadge.textContent = '⚠️ Error';
-      statusBadge.className = 'inline-flex items-center gap-1 text-red-600 text-sm';
+      statusBadge.style.cssText = 'font-size:var(--text-xs);color:var(--text-error)';
+      statusBadge?.classList.remove('hidden');
     } finally {
       isLoading = false; btn.disabled = false; btn.textContent = '📝 Summarize Text';
     }
@@ -77,5 +84,5 @@ import Layout from '../layouts/Layout.astro';
       catch { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); copyBtn.textContent = '✅ Copied!'; setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000); }
     }
   });
-  textarea?.addEventListener('input', function() { charCount.textContent = this.value.length + ' / 5000 characters'; });
+  textarea?.addEventListener('input', function() { charCount.textContent = this.value.length + ' / 5000'; });
 </script>

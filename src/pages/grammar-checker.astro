@@ -3,75 +3,75 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Free Grammar Checker — Fix Grammar, Spelling & Style | CleverWrite" description="Check grammar, spelling, and punctuation for free. Get instant corrections and readability scores." canonical="/grammar-checker">
-  <main class="max-w-3xl mx-auto px-4 py-12">
-    <section class="text-center mb-8">
-      <h1 class="text-4xl font-bold mb-2">Free Grammar Checker</h1>
-      <p class="text-gray-600">Check grammar, spelling, punctuation, and style. Get instant corrections and readability scores.</p>
+  <main class="container-narrow section-block">
+    <section class="hero">
+      <h1>Free Grammar Checker</h1>
+      <p>Check grammar, spelling, punctuation, and style. Get instant corrections and readability scores.</p>
     </section>
 
-    <section class="bg-white rounded-xl shadow-lg p-6 mb-8">
+    <section class="tool-panel">
       <textarea
         id="inputText"
-        class="w-full h-48 border border-gray-300 rounded-lg p-4 text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+        class="text-input"
         placeholder="Paste your text here to check grammar..."
       ></textarea>
 
-      <div class="flex justify-between items-center mt-4">
-        <span class="text-sm text-gray-400" id="charCount">0 / 10000 characters</span>
-        <button id="checkBtn" class="bg-emerald-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition disabled:opacity-50">
+      <div class="flex justify-between items-center mt-2">
+        <span id="charCount">0 / 10000 characters</span>
+        <button id="checkBtn" class="btn-primary">
           ✨ Check Grammar
         </button>
       </div>
 
       <!-- Results Overview -->
-      <div id="resultArea" class="mt-6 hidden">
-        <div class="flex items-center gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+      <div id="resultArea" class="mt-3 hidden">
+        <div class="result-box flex items-center gap-2 mb-3">
           <div>
-            <div class="text-3xl font-bold" id="errorCount">0</div>
-            <div class="text-sm text-gray-500">errors found</div>
+            <div id="errorCount" class="font-semibold">0</div>
+            <div>errors found</div>
           </div>
-          <div class="border-l pl-4">
-            <div class="text-lg font-semibold">Readability</div>
+          <div>
+            <div class="font-semibold">Readability</div>
             <div class="flex items-center gap-2">
-              <span class="text-2xl font-bold" id="readabilityScore">--</span>
-              <div class="w-24 bg-gray-200 rounded-full h-2.5">
-                <div id="readabilityBar" class="h-2.5 rounded-full" style="width:0%"></div>
+              <span id="readabilityScore">--</span>
+              <div class="score-bar">
+                <div id="readabilityBar" class="score-bar-fill" style="width:0%"></div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Issues List -->
-        <div id="issuesArea" class="mb-6">
+        <div id="issuesArea" class="mb-3">
           <h3 class="font-semibold mb-3">Issues Found</h3>
           <div id="issuesList" class="space-y-3"></div>
         </div>
 
         <!-- Corrected Text -->
-        <div class="mb-6">
+        <div class="mb-3">
           <h3 class="font-semibold mb-2">Corrected Version</h3>
-          <div id="correctedText" class="bg-gray-50 border rounded-lg p-4 min-h-[80px] whitespace-pre-wrap text-sm"></div>
-          <button id="copyCorrectedBtn" class="mt-2 bg-gray-200 px-4 py-2 rounded-lg text-sm hover:bg-gray-300 transition">📋 Copy Corrected</button>
+          <div id="correctedText" class="result-box"></div>
+          <button id="copyCorrectedBtn" class="btn-secondary mt-2">📋 Copy Corrected</button>
         </div>
 
         <!-- Suggestions -->
-        <div id="suggestionsArea" class="p-4 bg-blue-50 rounded-lg">
-          <h3 class="font-semibold mb-1 text-blue-800">💡 Suggestions</h3>
-          <p id="suggestionsText" class="text-sm text-blue-700"></p>
+        <div id="suggestionsArea" class="card">
+          <h3 class="font-semibold">💡 Suggestions</h3>
+          <p id="suggestionsText"></p>
         </div>
       </div>
     </section>
 
     <!-- Related Tools -->
-    <section class="border-t pt-8">
-      <h2 class="text-xl font-semibold mb-4">Related Tools</h2>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <a href="/humanizer" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🤖 AI Humanizer</a>
-        <a href="/polish-email" class="block p-3 border rounded-lg hover:bg-gray-50 transition">📧 Polish Email</a>
-        <a href="/improve-essay" class="block p-3 border rounded-lg hover:bg-gray-50 transition">📄 Improve Essay</a>
-        <a href="/simplify-text" class="block p-3 border rounded-lg hover:bg-gray-50 transition">📖 Simplify Text</a>
-        <a href="/paraphraser" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🔄 Paraphraser</a>
-        <a href="/ai-detector" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🔍 AI Detector</a>
+    <section class="section-block">
+      <h2 class="section-title">Related Tools</h2>
+      <div class="grid-3">
+        <a href="/humanizer" class="tool-link-card">🤖 AI Humanizer</a>
+        <a href="/polish-email" class="tool-link-card">📧 Polish Email</a>
+        <a href="/improve-essay" class="tool-link-card">📄 Improve Essay</a>
+        <a href="/simplify-text" class="tool-link-card">📖 Simplify Text</a>
+        <a href="/paraphraser" class="tool-link-card">🔄 Paraphraser</a>
+        <a href="/ai-detector" class="tool-link-card">🔍 AI Detector</a>
       </div>
     </section>
   </main>

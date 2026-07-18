@@ -3,36 +3,36 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Free Text Improver — Enhance Clarity & Readability | CleverWrite" description="Improve any text: fix errors, enhance clarity, boost readability, and polish your writing for free." canonical="/improver">
-  <main class="max-w-3xl mx-auto px-4 py-12">
-    <section class="text-center mb-8">
-      <h1 class="text-4xl font-bold mb-2">Free Text Improver</h1>
-      <p class="text-gray-600">Fix errors, enhance clarity, improve flow, and boost readability. Make your writing clearer and more effective.</p>
+  <main class="container-narrow">
+    <section class="hero">
+      <h1>Free Text Improver</h1>
+      <p>Fix errors, enhance clarity, improve flow, and boost readability. Make your writing clearer and more effective.</p>
     </section>
 
-    <section class="bg-white rounded-xl shadow-lg p-6 mb-8">
-      <textarea id="inputText" class="w-full h-48 border border-gray-300 rounded-lg p-4 text-base focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none" placeholder="Paste text to improve..."></textarea>
+    <section class="tool-panel">
+      <textarea id="inputText" class="text-input" placeholder="Paste text to improve..."></textarea>
       <div class="flex justify-between items-center mt-4">
-        <span class="text-sm text-gray-400 char-count">0 / 5000 characters</span>
-        <button id="actionBtn" class="bg-teal-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-teal-700 transition disabled:opacity-50">⬆️ Improve Text</button>
+        <span class="char-count" style="font-size: var(--text-sm); color: var(--text-muted);">0 / 5000 characters</span>
+        <button id="actionBtn" class="btn-primary">⬆️ Improve Text</button>
       </div>
       <div id="resultArea" class="mt-6 hidden">
-        <h3 class="font-semibold mb-2">Improved Text</h3>
-        <div id="resultText" class="bg-gray-50 border rounded-lg p-4 min-h-[100px] whitespace-pre-wrap"></div>
-        <div class="flex gap-3 mt-3">
-          <button id="copyBtn" class="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 transition">📋 Copy</button>
-          <span id="statusBadge" class="inline-flex items-center gap-1 text-green-600 text-sm">✅ Done</span>
+        <h3 class="mb-2">Improved Text</h3>
+        <div id="resultText" class="result-box"></div>
+        <div class="flex gap-2 mt-3">
+          <button id="copyBtn" class="btn-secondary">📋 Copy</button>
+          <span id="statusBadge" class="stat-badge success">✅ Done</span>
         </div>
       </div>
     </section>
 
-    <section class="border-t pt-8">
-      <h2 class="text-xl font-semibold mb-4">Related Tools</h2>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <a href="/grammar-checker" class="block p-3 border rounded-lg hover:bg-gray-50 transition">✨ Grammar Checker</a>
-        <a href="/polish-text" class="block p-3 border rounded-lg hover:bg-gray-50 transition">✨ Polish Text</a>
-        <a href="/paraphraser" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🔄 Paraphraser</a>
-        <a href="/improve-essay" class="block p-3 border rounded-lg hover:bg-gray-50 transition">⬆️ Improve Essay</a>
-        <a href="/improve-email" class="block p-3 border rounded-lg hover:bg-gray-50 transition">⬆️ Improve Email</a>
+    <section class="section-block">
+      <h2>Related Tools</h2>
+      <div class="grid-3">
+        <a href="/grammar-checker" class="tool-link-card">✨ Grammar Checker</a>
+        <a href="/polish-text" class="tool-link-card">✨ Polish Text</a>
+        <a href="/paraphraser" class="tool-link-card">🔄 Paraphraser</a>
+        <a href="/improve-essay" class="tool-link-card">⬆️ Improve Essay</a>
+        <a href="/improve-email" class="tool-link-card">⬆️ Improve Email</a>
       </div>
     </section>
   </main>
@@ -65,7 +65,7 @@ import Layout from '../layouts/Layout.astro';
       resultText.textContent = 'Error: ' + err.message + '\n\nPlease try again.';
       resultArea?.classList.remove('hidden');
       statusBadge.textContent = '⚠️ Error';
-      statusBadge.className = 'inline-flex items-center gap-1 text-red-600 text-sm';
+      statusBadge.className = 'stat-badge error';
     } finally {
       isLoading = false; btn.disabled = false; btn.textContent = '⬆️ Improve Text';
     }

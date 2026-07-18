@@ -9,111 +9,90 @@ export function getStaticPaths() {
   }));
 }
 
-const { slug, verb, displayVerb, displayAction, contentType, h1, desc, keywords } = Astro.props;
+const { slug, verb, displayVerb, displayAction, contentType, h1, desc } = Astro.props;
 
-// Get related pages (same verb, different types)
-const relatedSameVerb = pages
-  .filter(p => p.verb === verb && p.slug !== slug)
-  .slice(0, 6);
+// Related pages (same verb)
+const related = pages.filter(p => p.verb === verb && p.slug !== slug).slice(0, 6);
 
-// Get related pages (same content type, different verbs)
-const relatedSameType = pages
-  .filter(p => p.contentType === contentType && p.verb !== verb)
-  .slice(0, 4);
+const icon = { humanize:'🤖', rewrite:'✏️', paraphrase:'🔄', improve:'⬆️', polish:'✨', summarize:'📝', expand:'🔍', shorten:'✂️', formalize:'👔', simplify:'📖' }[verb] || '🛠️';
 
-const kws = keywords.split(',').map(k => k.trim());
-const kwString = kws.join(', ');
-const icon = {
-  humanize: '🤖',
-  rewrite: '✏️',
-  paraphrase: '🔄',
-  improve: '⬆️',
-  polish: '✨',
-  summarize: '📝',
-  expand: '🔍',
-  shorten: '✂️',
-  formalize: '👔',
-  simplify: '📖'
-}[verb] || '🛠️';
-
-const actionLabel = `${displayAction} This ${contentType}`;
-const placeholderText = `Paste your ${contentType.toLowerCase()} here...`;
-const resultLabel = `${displayVerb}ed ${contentType}`;
-const metaTitle = `${h1} | CleverWrite — Free AI Writing Toolkit`;
+const useCases = [
+  `You just used AI to generate ${contentType.toLowerCase()} content and need to make it sound natural.`,
+  `Your ${contentType.toLowerCase()} needs to pass AI detection tools like GPTZero or Turnitin.`,
+  `You want to improve the readability and flow of your ${contentType.toLowerCase()}.`,
+];
 ---
 
-<Layout title={metaTitle} canonical={`/${slug}`} metaDesc={desc} metaKeywords={kwString}>
-  <main class="max-w-3xl mx-auto px-4 py-12">
-    <!-- SEO Content -->
-    <article class="mb-8">
-      <div class="flex items-center gap-2 mb-2">
-        <span class="text-2xl">{icon}</span>
-        <span class="text-sm text-gray-400 uppercase tracking-wide">{displayVerb}</span>
+<Layout title={`${h1} | CleverWrite`} description={desc} canonical={`/${slug}`}>
+  <main class="container section-block" style="padding-top:var(--space-3)">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumbs">
+      <a href="/">Home</a>
+      <span>/</span>
+      <a href="/tools">{displayVerb}</a>
+      <span>/</span>
+      <span>{contentType}</span>
+    </nav>
+
+    <!-- H1 -->
+    <h1 style="margin-bottom:var(--space-1)">{icon} {h1}</h1>
+    <p style="color:var(--text-muted);font-size:var(--text-sm);margin-bottom:var(--space-3)">{desc}</p>
+
+    <!-- Tool Panel -->
+    <div class="tool-panel">
+      <div class="flex items-center gap-1" style="margin-bottom:var(--space-2)">
+        <span class="tag">{displayVerb}</span>
+        <span style="font-size:var(--text-xs);color:var(--text-muted)">{contentType}</span>
       </div>
-      <h1 class="text-3xl font-bold mb-2">{h1}</h1>
-      <p class="text-gray-600">{desc}</p>
-    </article>
-
-    <!-- Tool Interface -->
-    <section class="bg-white rounded-xl shadow-lg p-6 mb-8">
-      <div class="flex items-center gap-2 mb-4">
-        <span class="bg-blue-100 text-blue-700 text-xs font-medium px-2.5 py-0.5 rounded">Free Tool</span>
-        <span class="text-sm text-gray-400">{contentType}</span>
+      <textarea id="inputText" class="text-input" style="min-height:200px" placeholder={`Paste your ${contentType.toLowerCase()} here...`}></textarea>
+      <div class="flex justify-between items-center mt-2">
+        <span class="char-count" style="font-size:var(--text-xs);color:var(--text-muted)">0 / 5000</span>
+        <button id="actionBtn" data-verb={verb} class="btn-primary">{icon} {displayAction} This {contentType}</button>
       </div>
-
-      <textarea
-        id="inputText"
-        class="w-full h-48 border border-gray-300 rounded-lg p-4 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-        placeholder={placeholderText}
-      ></textarea>
-
-      <div class="flex justify-between items-center mt-4">
-        <span class="text-sm text-gray-400 char-count">0 / 5000 characters</span>
-        <button id="actionBtn" data-verb={verb} class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50">
-          {icon} {actionLabel}
-        </button>
-      </div>
-
-      <div id="resultArea" class="mt-6 hidden">
-        <h3 class="font-semibold mb-2">{resultLabel}</h3>
-        <div id="resultText" class="bg-gray-50 border rounded-lg p-4 min-h-[100px] whitespace-pre-wrap"></div>
-        <div class="flex gap-3 mt-3">
-          <button id="copyBtn" class="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 transition">📋 Copy</button>
-          <span id="statusBadge" class="inline-flex items-center gap-1 text-green-600 text-sm">✅ Done</span>
+      <div id="resultArea" class="mt-3 hidden">
+        <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Result</h3>
+        <div id="resultText" class="result-box"></div>
+        <div class="flex gap-1 mt-2">
+          <button id="copyBtn" class="btn-secondary">📋 Copy</button>
+          <span id="statusBadge" class="stat-badge success hidden">✅ Done</span>
         </div>
       </div>
-    </section>
-
-    <!-- Related: Same Verb -->
-    <section class="border-t pt-8 mb-8">
-      <h2 class="text-xl font-semibold mb-4">More {displayVerb} Tools</h2>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-        {relatedSameVerb.map(p => (
-          <a href={`/${p.slug}`} class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">
-            {p.displayVerb} {p.contentType}
-          </a>
-        ))}
-      </div>
-    </section>
-
-    <!-- Related: Same Type -->
-    {relatedSameType.length > 0 && (
-    <section class="border-t pt-8 mb-8">
-      <h2 class="text-xl font-semibold mb-4">More Ways to Process {contentType}</h2>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-        {relatedSameType.map(p => (
-          <a href={`/${p.slug}`} class="block p-3 border rounded-lg hover:bg-gray-50 transition text-sm">
-            {p.displayVerb} {p.contentType}
-          </a>
-        ))}
-      </div>
-    </section>
-    )}
-
-    <!-- Home link -->
-    <div class="text-center border-t pt-8">
-      <a href="/" class="text-blue-600 hover:underline">← Back to All Tools</a>
     </div>
+
+    <!-- Use Cases -->
+    <div class="card section-block" style="padding:var(--space-3)">
+      <h3 style="margin-bottom:var(--space-2)">When to Use This Tool</h3>
+      <ul style="font-size:var(--text-sm);color:var(--text-muted);line-height:var(--leading-base);padding-left:var(--space-2)">
+        {useCases.map(c => <li style="margin-bottom:var(--space-1)">{c}</li>)}
+      </ul>
+    </div>
+
+    <!-- FAQ -->
+    <div class="card section-block" style="padding:var(--space-3)">
+      <h3 style="margin-bottom:var(--space-2)">FAQ</h3>
+      <div class="faq-item">
+        <div class="faq-q">How does this {displayVerb.toLowerCase()} tool work?</div>
+        <div class="faq-a">Paste your text and click "{displayAction} This {contentType}". Our AI analyzes and processes it, returning the result instantly.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is it free to use?</div>
+        <div class="faq-a">Yes, completely free. No registration or credit card required. Up to 5,000 characters per request.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What's the difference between {displayVerb.toLowerCase()} and other tools?</div>
+        <div class="faq-a">Each tool specializes in a specific writing action. {displayVerb} focuses on {verb === 'humanize' ? 'making text sound natural and human-like' : verb === 'rewrite' ? 'completely rewording your text' : verb === 'paraphrase' ? 'rephrasing while keeping meaning identical' : verb === 'summarize' ? 'condensing to key points' : verb === 'improve' ? 'enhancing clarity and flow' : verb === 'expand' ? 'adding depth and detail' : verb === 'shorten' ? 'making text more concise' : verb === 'polish' ? 'fixing grammar and style' : verb === 'formalize' ? 'making text more professional' : 'making text easier to understand'}.</div>
+      </div>
+    </div>
+
+    <!-- Related -->
+    <section class="section-block">
+      <h3 style="margin-bottom:var(--space-2)">Related {displayVerb} Tools</h3>
+      <div class="grid-3">
+        {related.map(p => (
+          <a href={`/${p.slug}`} class="tool-link-card">{p.displayVerb} {p.contentType}</a>
+        ))}
+      </div>
+    </section>
   </main>
 </Layout>
 
@@ -126,37 +105,35 @@ const metaTitle = `${h1} | CleverWrite — Free AI Writing Toolkit`;
   const statusBadge = document.getElementById('statusBadge');
   const charCount = document.querySelector('.char-count');
   let isLoading = false;
-  const verb = document.getElementById('actionBtn')?.getAttribute('data-verb') || 'rewrite';
+  const verb = btn?.getAttribute('data-verb') || 'rewrite';
 
   btn?.addEventListener('click', async () => {
     const text = textarea?.value.trim();
     if (!text || isLoading) return;
-
     isLoading = true;
     btn.disabled = true;
     btn.textContent = '⏳ Processing...';
     resultArea?.classList.add('hidden');
-
+    statusBadge?.classList.add('hidden');
     try {
       const res = await fetch('/api/tool', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, verb })
       });
-
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'API error');
-
       resultText.textContent = data.result;
       resultArea?.classList.remove('hidden');
-      copyBtn.textContent = '📋 Copy';
       statusBadge.textContent = '✅ Done';
-      statusBadge.className = 'inline-flex items-center gap-1 text-green-600 text-sm';
+      statusBadge.className = 'stat-badge success';
+      statusBadge.classList.remove('hidden');
     } catch (err) {
-      resultText.textContent = 'Error: ' + err.message + '\n\nPlease try again.';
+      resultText.textContent = 'Error: ' + err.message;
       resultArea?.classList.remove('hidden');
       statusBadge.textContent = '⚠️ Error';
-      statusBadge.className = 'inline-flex items-center gap-1 text-red-600 text-sm';
+      statusBadge.className = 'stat-badge error';
+      statusBadge.classList.remove('hidden');
     } finally {
       isLoading = false;
       btn.disabled = false;
@@ -167,24 +144,10 @@ const metaTitle = `${h1} | CleverWrite — Free AI Writing Toolkit`;
   copyBtn?.addEventListener('click', async () => {
     const text = resultText?.textContent;
     if (text) {
-      try {
-        await navigator.clipboard.writeText(text);
-        copyBtn.textContent = '✅ Copied!';
-        setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
-      } catch {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        copyBtn.textContent = '✅ Copied!';
-        setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
-      }
+      try { await navigator.clipboard.writeText(text); copyBtn.textContent = '✅ Copied!'; setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000); }
+      catch { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); copyBtn.textContent = '✅ Copied!'; setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000); }
     }
   });
 
-  textarea?.addEventListener('input', function() {
-    charCount.textContent = this.value.length + ' / 5000 characters';
-  });
+  textarea?.addEventListener('input', function() { charCount.textContent = this.value.length + ' / 5000'; });
 </script>

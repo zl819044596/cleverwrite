@@ -2,65 +2,87 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Free AI Humanizer — Make AI Text Sound Human | CleverWrite">
-  <main class="max-w-3xl mx-auto px-4 py-12">
-    <section class="text-center mb-8">
-      <h1 class="text-4xl font-bold mb-2">Free AI Humanizer</h1>
-      <p class="text-gray-600">Make AI-written text sound naturally human. Bypass GPTZero, Originality & Turnitin.</p>
+<Layout title="Free AI Humanizer — Make AI Text Sound Human | CleverWrite" description="Make AI-written text sound naturally human. Bypass GPTZero, Originality & Turnitin. Free online tool." canonical="/humanizer">
+  <main class="container section-block" style="padding-top:var(--space-3)">
+    <nav class="breadcrumbs">
+      <a href="/">Home</a>
+      <span>/</span>
+      <span>AI Humanizer</span>
+    </nav>
+
+    <section class="hero" style="padding:var(--space-3) 0">
+      <h1>Free AI Humanizer</h1>
+      <p>Make AI-written text sound naturally human. Bypass GPTZero, Originality & Turnitin.</p>
     </section>
 
-    <!-- Tool Interface -->
-    <section class="bg-white rounded-xl shadow-lg p-6 mb-8">
-      <textarea
-        class="w-full h-48 border border-gray-300 rounded-lg p-4 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-        placeholder="Paste your AI-generated text here..."
-      ></textarea>
-
-      <div class="flex justify-between items-center mt-4">
-        <span class="text-sm text-gray-400" id="charCount">0 characters</span>
-        <button class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition" id="humanizeBtn">
-          ✨ Humanize My Text
-        </button>
+    <!-- Tool -->
+    <div class="tool-panel">
+      <textarea id="inputText" class="text-input" style="min-height:220px" placeholder="Paste your AI-generated text here..."></textarea>
+      <div class="flex justify-between items-center mt-2">
+        <span style="font-size:var(--text-xs);color:var(--text-muted)" id="charCount">0 / 5000</span>
+        <button id="actionBtn" class="btn-primary">🤖 Humanize Text</button>
       </div>
-
-      <!-- Result Area -->
-      <div id="resultArea" class="mt-6 hidden">
-        <h3 class="font-semibold mb-2">Rewritten Text</h3>
-        <div class="bg-gray-50 border rounded-lg p-4 min-h-[100px] whitespace-pre-wrap" id="resultText"></div>
-        <div class="flex gap-3 mt-3">
-          <button class="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 transition" id="copyBtn">📋 Copy</button>
-          <span class="inline-flex items-center gap-1 text-green-600 text-sm" id="detectionStatus">
-            ✅ Detected as Human
-          </span>
+      <div id="resultArea" class="mt-3 hidden">
+        <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Humanized Text</h3>
+        <div id="resultText" class="result-box"></div>
+        <div class="flex gap-1 mt-2 items-center">
+          <button id="copyBtn" class="btn-secondary">📋 Copy</button>
+          <span id="detectionStatus" class="stat-badge success hidden">✅ Detected as Human</span>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- How it Works -->
-    <section class="mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-center">How It Works</h2>
-      <div class="grid grid-cols-3 gap-4 text-center">
-        <div class="p-4"><div class="text-3xl mb-2">1️⃣</div><p class="font-semibold">Paste</p><p class="text-sm text-gray-500">Paste your AI text</p></div>
-        <div class="p-4"><div class="text-3xl mb-2">2️⃣</div><p class="font-semibold">Humanize</p><p class="text-sm text-gray-500">Click one button</p></div>
-        <div class="p-4"><div class="text-3xl mb-2">3️⃣</div><p class="font-semibold">Copy</p><p class="text-sm text-gray-500">Copy & use anywhere</p></div>
+    <!-- How To -->
+    <div class="card section-block">
+      <h3 style="margin-bottom:var(--space-2)">How to Use</h3>
+      <ol style="font-size:var(--text-sm);color:var(--text-muted);padding-left:var(--space-2)">
+        <li style="margin-bottom:var(--space-1)">Paste your AI-generated text into the input box</li>
+        <li style="margin-bottom:var(--space-1)">Click "Humanize Text"</li>
+        <li style="margin-bottom:var(--space-1)">Copy the humanized result and use it anywhere</li>
+      </ol>
+    </div>
+
+    <!-- Use Cases -->
+    <div class="card section-block">
+      <h3 style="margin-bottom:var(--space-2)">Use Cases</h3>
+      <ul style="font-size:var(--text-sm);color:var(--text-muted);padding-left:var(--space-2)">
+        <li style="margin-bottom:var(--space-1)">Students — make AI-assisted essays sound natural</li>
+        <li style="margin-bottom:var(--space-1)">Content writers — humanize AI drafts before publishing</li>
+        <li style="margin-bottom:var(--space-1)">Professionals — polish AI-generated emails and reports</li>
+      </ul>
+    </div>
+
+    <!-- FAQ -->
+    <div class="card section-block">
+      <h3 style="margin-bottom:var(--space-2)">FAQ</h3>
+      <div class="faq-item">
+        <div class="faq-q">Does it really bypass AI detectors?</div>
+        <div class="faq-a">Yes. Our AI rewrites text to remove common AI patterns — repetitive structures, overly perfect grammar, and unnatural word choices — making it nearly impossible to detect as AI-generated.</div>
       </div>
-    </section>
+      <div class="faq-item">
+        <div class="faq-q">Is it free?</div>
+        <div class="faq-a">Yes, completely free. No signup needed. Up to 5,000 characters per request.</div>
+      </div>
+    </div>
 
-    <!-- Related Tools -->
-    <section class="border-t pt-8">
-      <h2 class="text-xl font-semibold mb-4">Related Tools</h2>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <a href="/ai-detector" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🛡️ AI Detector</a>
-        <a href="/grammar-checker" class="block p-3 border rounded-lg hover:bg-gray-50 transition">📝 Grammar Checker</a>
-        <a href="/paraphraser" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🔄 Paraphraser</a>
+    <!-- Related -->
+    <section class="section-block">
+      <h3 style="margin-bottom:var(--space-2)">Related Tools</h3>
+      <div class="grid-3">
+        <a href="/ai-detector" class="tool-link-card">🔍 AI Detector</a>
+        <a href="/humanize-essay" class="tool-link-card">📄 Humanize Essay</a>
+        <a href="/humanize-chatgpt" class="tool-link-card">🤖 Humanize ChatGPT</a>
+        <a href="/humanize-linkedin-post" class="tool-link-card">💼 Humanize LinkedIn</a>
+        <a href="/paraphraser" class="tool-link-card">🔄 Paraphraser</a>
+        <a href="/grammar-checker" class="tool-link-card">✨ Grammar Checker</a>
       </div>
     </section>
   </main>
 </Layout>
 
-|<script>
-  const humanizeBtn = document.getElementById('humanizeBtn');
-  const textarea = document.querySelector('textarea');
+<script>
+  const btn = document.getElementById('actionBtn');
+  const textarea = document.getElementById('inputText');
   const resultArea = document.getElementById('resultArea');
   const resultText = document.getElementById('resultText');
   const copyBtn = document.getElementById('copyBtn');
@@ -68,63 +90,47 @@ import Layout from '../layouts/Layout.astro';
   const charCount = document.getElementById('charCount');
   let isLoading = false;
 
-  humanizeBtn?.addEventListener('click', async () => {
+  btn?.addEventListener('click', async () => {
     const text = textarea?.value.trim();
     if (!text || isLoading) return;
-
     isLoading = true;
-    humanizeBtn.disabled = true;
-    humanizeBtn.textContent = '⏳ Humanizing...';
+    btn.disabled = true;
+    btn.textContent = '⏳ Processing...';
     resultArea?.classList.add('hidden');
-
+    detectionStatus?.classList.add('hidden');
     try {
       const res = await fetch('/api/humanize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, tone: 'casual' })
       });
-
       const data = await res.json();
-
       if (!res.ok) throw new Error(data.error || 'API error');
-
       resultText.textContent = data.result;
       resultArea?.classList.remove('hidden');
-      copyBtn.textContent = '📋 Copy';
+      detectionStatus.textContent = '✅ Detected as Human';
+      detectionStatus.className = 'stat-badge success';
+      detectionStatus.classList.remove('hidden');
     } catch (err) {
-      resultText.textContent = 'Error: ' + err.message + '\n\nPlease try again.';
+      resultText.textContent = 'Error: ' + err.message;
       resultArea?.classList.remove('hidden');
       detectionStatus.textContent = '⚠️ Error';
-      detectionStatus.className = 'inline-flex items-center gap-1 text-red-600 text-sm';
+      detectionStatus.className = 'stat-badge error';
+      detectionStatus.classList.remove('hidden');
     } finally {
       isLoading = false;
-      humanizeBtn.disabled = false;
-      humanizeBtn.textContent = '✨ Humanize My Text';
+      btn.disabled = false;
+      btn.textContent = '🤖 Humanize Text';
     }
   });
 
   copyBtn?.addEventListener('click', async () => {
     const text = resultText?.textContent;
     if (text) {
-      try {
-        await navigator.clipboard.writeText(text);
-        copyBtn.textContent = '✅ Copied!';
-        setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
-      } catch {
-        // Fallback
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        copyBtn.textContent = '✅ Copied!';
-        setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
-      }
+      try { await navigator.clipboard.writeText(text); copyBtn.textContent = '✅ Copied!'; setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000); }
+      catch { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); copyBtn.textContent = '✅ Copied!'; setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000); }
     }
   });
 
-  textarea?.addEventListener('input', function() {
-    charCount.textContent = this.value.length + ' / 5000 characters';
-  });
+  textarea?.addEventListener('input', function() { charCount.textContent = this.value.length + ' / 5000'; });
 </script>
