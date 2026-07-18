@@ -1,0 +1,19 @@
+---
+export interface Props {
+  href: string;
+  name: string;
+  desc: string;
+  comingSoon?: boolean;
+}
+
+const { href, name, desc, comingSoon } = Astro.props;
+---
+
+<a
+  href={comingSoon ? "#" : href}
+  class:list={["block p-4 border rounded-xl hover:shadow-md hover:border-blue-300 transition bg-white", comingSoon && "opacity-60 pointer-events-none"]}
+>
+  <h3 class="font-semibold text-lg mb-1">{name}</h3>
+  <p class="text-sm text-gray-500">{desc}</p>
+  {comingSoon && <span class="text-xs text-gray-400 mt-1 inline-block">Coming soon</span>}
+</a>

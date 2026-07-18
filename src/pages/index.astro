@@ -1,0 +1,37 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ToolCard from '../components/ToolCard.astro';
+---
+
+<Layout title="CleverWrite — Free AI Writing Toolkit">
+  <main class="max-w-4xl mx-auto px-4 py-12">
+    <!-- Hero -->
+    <section class="text-center mb-16">
+      <h1 class="text-5xl font-bold mb-4">CleverWrite</h1>
+      <p class="text-xl text-gray-600 mb-8">The most complete free AI writing toolkit</p>
+      <a href="/humanizer" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition">
+        Try AI Humanizer Free →
+      </a>
+    </section>
+
+    <!-- Tools Grid -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-semibold mb-6">All Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <ToolCard href="/humanizer" name="AI Humanizer" desc="Make AI text sound human" />
+        <ToolCard href="/ai-detector" name="AI Detector" desc="Detect AI-written content" comingSoon />
+        <ToolCard href="/grammar-checker" name="Grammar Checker" desc="Fix grammar & style" comingSoon />
+        <ToolCard href="/paraphraser" name="Paraphraser" desc="Rewrite any text" comingSoon />
+        <ToolCard href="/summarizer" name="Summarizer" desc="Summarize long content" comingSoon />
+        <ToolCard href="/translator" name="Translator" desc="Translate between languages" comingSoon />
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .coming-soon {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+</style>

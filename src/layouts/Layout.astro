@@ -1,0 +1,40 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description || "Free AI writing toolkit — Humanizer, AI Detector, Grammar Checker & more"} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="bg-gray-50 text-gray-900 antialiased">
+    <nav class="border-b bg-white">
+      <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="/" class="text-xl font-bold text-blue-600">CleverWrite</a>
+        <div class="flex gap-4 text-sm">
+          <a href="/humanizer" class="hover:text-blue-600 transition">Humanizer</a>
+          <a href="/tools" class="hover:text-blue-600 transition">All Tools</a>
+        </div>
+      </div>
+    </nav>
+    <slot />
+    <footer class="border-t mt-16 py-8 text-center text-sm text-gray-400">
+      <p>CleverWrite — Free AI Writing Toolkit</p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+</style>

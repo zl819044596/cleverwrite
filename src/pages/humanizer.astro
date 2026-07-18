@@ -1,0 +1,79 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Free AI Humanizer — Make AI Text Sound Human | CleverWrite">
+  <main class="max-w-3xl mx-auto px-4 py-12">
+    <section class="text-center mb-8">
+      <h1 class="text-4xl font-bold mb-2">Free AI Humanizer</h1>
+      <p class="text-gray-600">Make AI-written text sound naturally human. Bypass GPTZero, Originality & Turnitin.</p>
+    </section>
+
+    <!-- Tool Interface -->
+    <section class="bg-white rounded-xl shadow-lg p-6 mb-8">
+      <textarea
+        class="w-full h-48 border border-gray-300 rounded-lg p-4 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+        placeholder="Paste your AI-generated text here..."
+      ></textarea>
+
+      <div class="flex justify-between items-center mt-4">
+        <span class="text-sm text-gray-400" id="charCount">0 characters</span>
+        <button class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition" id="humanizeBtn">
+          ✨ Humanize My Text
+        </button>
+      </div>
+
+      <!-- Result Area -->
+      <div id="resultArea" class="mt-6 hidden">
+        <h3 class="font-semibold mb-2">Rewritten Text</h3>
+        <div class="bg-gray-50 border rounded-lg p-4 min-h-[100px] whitespace-pre-wrap" id="resultText"></div>
+        <div class="flex gap-3 mt-3">
+          <button class="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 transition" id="copyBtn">📋 Copy</button>
+          <span class="inline-flex items-center gap-1 text-green-600 text-sm" id="detectionStatus">
+            ✅ Detected as Human
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it Works -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-center">How It Works</h2>
+      <div class="grid grid-cols-3 gap-4 text-center">
+        <div class="p-4"><div class="text-3xl mb-2">1️⃣</div><p class="font-semibold">Paste</p><p class="text-sm text-gray-500">Paste your AI text</p></div>
+        <div class="p-4"><div class="text-3xl mb-2">2️⃣</div><p class="font-semibold">Humanize</p><p class="text-sm text-gray-500">Click one button</p></div>
+        <div class="p-4"><div class="text-3xl mb-2">3️⃣</div><p class="font-semibold">Copy</p><p class="text-sm text-gray-500">Copy & use anywhere</p></div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="border-t pt-8">
+      <h2 class="text-xl font-semibold mb-4">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <a href="/ai-detector" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🛡️ AI Detector</a>
+        <a href="/grammar-checker" class="block p-3 border rounded-lg hover:bg-gray-50 transition">📝 Grammar Checker</a>
+        <a href="/paraphraser" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🔄 Paraphraser</a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  // Tool interactivity will be implemented in Phase 1
+  document.getElementById('humanizeBtn')?.addEventListener('click', () => {
+    const textarea = document.querySelector('textarea');
+    if (textarea?.value.trim()) {
+      document.getElementById('resultArea')?.classList.remove('hidden');
+      document.getElementById('resultText').textContent = textarea.value + '\n\n[Humanized version will appear here — LLM integration coming soon]';
+    }
+  });
+
+  document.getElementById('copyBtn')?.addEventListener('click', () => {
+    const text = document.getElementById('resultText')?.textContent;
+    if (text) navigator.clipboard.writeText(text);
+  });
+
+  document.querySelector('textarea')?.addEventListener('input', function() {
+    document.getElementById('charCount').textContent = this.value.length + ' characters';
+  });
+</script>
