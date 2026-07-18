@@ -1,0 +1,137 @@
+---
+import Layout from '../layouts/Layout.astro';
+import pages from '../data/programmatic-pages.json';
+
+export function getStaticPaths() {
+  return pages.map(p => ({
+    params: { slug: p.slug },
+    props: p
+  }));
+}
+
+const { slug, verb, contentType, h1, desc, keywords } = Astro.props;
+---
+
+<Layout title={`${h1} | CleverWrite`}>
+  <main class="max-w-3xl mx-auto px-4 py-12">
+    <!-- SEO Content -->
+    <article class="mb-8">
+      <h1 class="text-3xl font-bold mb-2">{h1}</h1>
+      <p class="text-gray-600">{desc}</p>
+    </article>
+
+    <!-- Tool Interface -->
+    <section class="bg-white rounded-xl shadow-lg p-6 mb-8">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="bg-blue-100 text-blue-700 text-xs font-medium px-2.5 py-0.5 rounded">Free Tool</span>
+        <span class="text-sm text-gray-400">{contentType}</span>
+      </div>
+
+      <textarea
+        class="w-full h-48 border border-gray-300 rounded-lg p-4 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+        placeholder={`Paste your AI-generated ${contentType.toLowerCase()} here...`}
+      ></textarea>
+
+      <div class="flex justify-between items-center mt-4">
+        <span class="text-sm text-gray-400 char-count">0 / 5000 characters</span>
+        <button class="btn-humanize bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50">
+          ✨ {verb} This {contentType}
+        </button>
+      </div>
+
+      <div class="result-area mt-6 hidden">
+        <h3 class="font-semibold mb-2">Rewritten {contentType}</h3>
+        <div class="bg-gray-50 border rounded-lg p-4 min-h-[100px] whitespace-pre-wrap result-text"></div>
+        <div class="flex gap-3 mt-3">
+          <button class="btn-copy bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 transition">📋 Copy</button>
+          <span class="detection-status inline-flex items-center gap-1 text-green-600 text-sm">✅ Detected as Human</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="border-t pt-8">
+      <h2 class="text-xl font-semibold mb-4">Related Humanizer Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <a href="/humanizer" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🤖 AI Humanizer</a>
+        <a href="/humanize-essay" class="block p-3 border rounded-lg hover:bg-gray-50 transition">📄 Essay Humanizer</a>
+        <a href="/humanize-email" class="block p-3 border rounded-lg hover:bg-gray-50 transition">✉️ Email Humanizer</a>
+        <a href="/humanize-blog" class="block p-3 border rounded-lg hover:bg-gray-50 transition">📝 Blog Humanizer</a>
+        <a href="/humanize-linkedin-post" class="block p-3 border rounded-lg hover:bg-gray-50 transition">💼 LinkedIn Humanizer</a>
+        <a href="/humanize-cover-letter" class="block p-3 border rounded-lg hover:bg-gray-50 transition">📋 Cover Letter Humanizer</a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  // Shared humanizer logic (same as /humanizer page)
+  const btn = document.querySelector('.btn-humanize');
+  const textarea = document.querySelector('textarea');
+  const resultArea = document.querySelector('.result-area');
+  const resultText = document.querySelector('.result-text');
+  const copyBtn = document.querySelector('.btn-copy');
+  const detectionStatus = document.querySelector('.detection-status');
+  const charCount = document.querySelector('.char-count');
+  let isLoading = false;
+
+  btn?.addEventListener('click', async () => {
+    const text = textarea?.value.trim();
+    if (!text || isLoading) return;
+
+    isLoading = true;
+    btn.disabled = true;
+    btn.textContent = '⏳ Working...';
+    resultArea?.classList.add('hidden');
+
+    try {
+      const res = await fetch('/api/humanize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, tone: 'casual' })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'API error');
+
+      resultText.textContent = data.result;
+      resultArea?.classList.remove('hidden');
+      copyBtn.textContent = '📋 Copy';
+      detectionStatus.textContent = '✅ Detected as Human';
+      detectionStatus.className = 'detection-status inline-flex items-center gap-1 text-green-600 text-sm';
+    } catch (err) {
+      resultText.textContent = 'Error: ' + err.message + '\n\nPlease try again.';
+      resultArea?.classList.remove('hidden');
+      detectionStatus.textContent = '⚠️ Error';
+      detectionStatus.className = 'detection-status inline-flex items-center gap-1 text-red-600 text-sm';
+    } finally {
+      isLoading = false;
+      btn.disabled = false;
+      btn.textContent = `✨ ${btn.textContent.includes('⏳') ? '✨' : '✨'} ${document.querySelector('h1')?.textContent?.split('—')[0]?.trim() || 'Humanize'}`;
+    }
+  });
+
+  copyBtn?.addEventListener('click', async () => {
+    const text = resultText?.textContent;
+    if (text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = '✅ Copied!';
+        setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        copyBtn.textContent = '✅ Copied!';
+        setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
+      }
+    }
+  });
+
+  textarea?.addEventListener('input', function() {
+    charCount.textContent = this.value.length + ' / 5000 characters';
+  });
+</script>

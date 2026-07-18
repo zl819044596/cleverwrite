@@ -1,0 +1,154 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Free AI Detector — Check If Text Is AI-Generated | CleverWrite">
+  <main class="max-w-3xl mx-auto px-4 py-12">
+    <section class="text-center mb-8">
+      <h1 class="text-4xl font-bold mb-2">Free AI Detector</h1>
+      <p class="text-gray-600">Check if text was written by AI. Detects GPTZero, ChatGPT, Claude & more.</p>
+    </section>
+
+    <section class="bg-white rounded-xl shadow-lg p-6 mb-8">
+      <textarea
+        id="inputText"
+        class="w-full h-48 border border-gray-300 rounded-lg p-4 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+        placeholder="Paste text to analyze..."
+      ></textarea>
+
+      <div class="flex justify-between items-center mt-4">
+        <span class="text-sm text-gray-400" id="charCount">0 / 10000 characters</span>
+        <button id="detectBtn" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition disabled:opacity-50">
+          🔍 Detect AI
+        </button>
+      </div>
+
+      <!-- Result -->
+      <div id="resultArea" class="mt-6 hidden">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="text-4xl font-bold" id="scoreDisplay">--</div>
+          <div>
+            <div class="text-xl font-semibold" id="labelDisplay">--</div>
+            <div class="text-sm text-gray-500">AI probability score</div>
+          </div>
+        </div>
+
+        <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+          <div id="scoreBar" class="h-3 rounded-full transition-all duration-500" style="width:0%"></div>
+        </div>
+
+        <div id="reasonsArea" class="mb-4">
+          <h3 class="font-semibold mb-2">Analysis</h3>
+          <ul id="reasonsList" class="list-disc list-inside text-sm text-gray-700 space-y-1"></ul>
+        </div>
+
+        <div id="highlightsArea">
+          <h3 class="font-semibold mb-2">Suspicious Phrases</h3>
+          <div id="highlightsList" class="text-sm text-gray-700"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="border-t pt-8">
+      <h2 class="text-xl font-semibold mb-4">Related Tools</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <a href="/humanizer" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🤖 AI Humanizer</a>
+        <a href="/grammar-checker" class="block p-3 border rounded-lg hover:bg-gray-50 transition">📝 Grammar Checker</a>
+        <a href="/paraphraser" class="block p-3 border rounded-lg hover:bg-gray-50 transition">🔄 Paraphraser</a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  const detectBtn = document.getElementById('detectBtn');
+  const textarea = document.getElementById('inputText');
+  const resultArea = document.getElementById('resultArea');
+  const scoreDisplay = document.getElementById('scoreDisplay');
+  const labelDisplay = document.getElementById('labelDisplay');
+  const scoreBar = document.getElementById('scoreBar');
+  const reasonsList = document.getElementById('reasonsList');
+  const highlightsList = document.getElementById('highlightsList');
+  const charCount = document.getElementById('charCount');
+  let isLoading = false;
+
+  function getScoreColor(score) {
+    if (score >= 80) return 'bg-red-500';
+    if (score >= 60) return 'bg-orange-500';
+    if (score >= 40) return 'bg-yellow-500';
+    if (score >= 20) return 'bg-lime-500';
+    return 'bg-green-500';
+  }
+
+  function getScoreTextColor(score) {
+    if (score >= 80) return 'text-red-600';
+    if (score >= 60) return 'text-orange-600';
+    if (score >= 40) return 'text-yellow-600';
+    return 'text-green-600';
+  }
+
+  detectBtn?.addEventListener('click', async () => {
+    const text = textarea?.value.trim();
+    if (!text || isLoading) return;
+
+    isLoading = true;
+    detectBtn.disabled = true;
+    detectBtn.textContent = '⏳ Analyzing...';
+    resultArea?.classList.add('hidden');
+
+    try {
+      const res = await fetch('/api/detect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'API error');
+
+      const score = data.score || 0;
+      scoreDisplay.textContent = score + '%';
+      scoreDisplay.className = 'text-4xl font-bold ' + getScoreTextColor(score);
+      labelDisplay.textContent = data.label || 'Uncertain';
+      scoreBar.style.width = score + '%';
+      scoreBar.className = 'h-3 rounded-full transition-all duration-500 ' + getScoreColor(score);
+
+      // Reasons
+      reasonsList.innerHTML = '';
+      (data.reasons || ['Analysis complete']).forEach(r => {
+        const li = document.createElement('li');
+        li.textContent = r;
+        reasonsList.appendChild(li);
+      });
+
+      // Highlights
+      highlightsList.innerHTML = '';
+      if (data.highlights && data.highlights.length > 0) {
+        data.highlights.forEach(h => {
+          const span = document.createElement('span');
+          span.className = 'inline-block bg-red-50 text-red-700 px-2 py-1 rounded mr-2 mb-2 text-sm';
+          span.textContent = '"' + h + '"';
+          highlightsList.appendChild(span);
+        });
+      } else {
+        highlightsList.textContent = 'No suspicious patterns detected.';
+        highlightsList.className = 'text-sm text-gray-500';
+      }
+
+      resultArea?.classList.remove('hidden');
+    } catch (err) {
+      scoreDisplay.textContent = '⚠️';
+      labelDisplay.textContent = 'Error: ' + err.message;
+      resultArea?.classList.remove('hidden');
+    } finally {
+      isLoading = false;
+      detectBtn.disabled = false;
+      detectBtn.textContent = '🔍 Detect AI';
+    }
+  });
+
+  textarea?.addEventListener('input', function() {
+    charCount.textContent = this.value.length + ' / 10000 characters';
+  });
+</script>
