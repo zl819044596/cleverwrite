@@ -1,0 +1,149 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Free Smart Rewriter — Rewrite Text with Any Tone | CleverWrite" description="Rewrite any text with AI. Choose from Professional, Casual, Academic, Creative, or Persuasive tones. No signup, free." canonical="/smart-rewriter/">
+  <main class="container section-block" style="padding-top:var(--space-3)">
+    <nav class="breadcrumbs">
+      <a href="/">Home</a>
+      <span>/</span>
+      <span>Smart Rewriter</span>
+    </nav>
+
+    <section class="hero" style="padding:var(--space-3) 0">
+      <h1>Free Smart Rewriter</h1>
+      <p>Rewrite any text with your chosen tone and style. Professional, casual, academic, creative, or persuasive.</p>
+    </section>
+
+    <!-- Tone Selector -->
+    <div class="tool-controls" style="display:flex;gap:var(--space-1);margin-bottom:var(--space-2);flex-wrap:wrap;align-items:center">
+      <label for="toneSelect" style="font-size:var(--text-sm);font-weight:500;color:var(--text-body)">Tone:</label>
+      <select id="toneSelect" class="text-input" style="min-height:auto;padding:6px 12px;width:auto;min-width:160px">
+        <option value="professional">Professional</option>
+        <option value="casual">Casual</option>
+        <option value="academic">Academic</option>
+        <option value="creative">Creative</option>
+        <option value="persuasive">Persuasive</option>
+      </select>
+    </div>
+
+    <!-- Tool -->
+    <div class="tool-panel">
+      <textarea id="inputText" class="text-input" style="min-height:220px" placeholder="Paste your text here to rewrite..."></textarea>
+      <div class="flex justify-between items-center mt-2">
+        <span style="font-size:var(--text-xs);color:var(--text-muted)" id="charCount">0 / 5000</span>
+        <button id="actionBtn" class="btn-primary">✏️ Rewrite</button>
+      </div>
+      <div id="resultArea" class="mt-3 hidden">
+        <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Rewritten Text</h3>
+        <div id="resultText" class="result-box"></div>
+        <div class="flex gap-1 mt-2 items-center">
+          <button id="copyBtn" class="btn-secondary">📋 Copy</button>
+          <span id="statusBadge" class="stat-badge success hidden">✅ Done</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- How To -->
+    <div class="card section-block">
+      <h3 style="margin-bottom:var(--space-2)">How to Use</h3>
+      <ol style="font-size:var(--text-sm);color:var(--text-muted);padding-left:var(--space-2)">
+        <li style="margin-bottom:var(--space-1)">Paste your text into the input box</li>
+        <li style="margin-bottom:var(--space-1)">Choose your desired tone</li>
+        <li style="margin-bottom:var(--space-1)">Click "Rewrite" and get your polished text</li>
+      </ol>
+    </div>
+
+    <!-- Use Cases -->
+    <div class="card section-block">
+      <h3 style="margin-bottom:var(--space-2)">Use Cases</h3>
+      <ul style="font-size:var(--text-sm);color:var(--text-muted);padding-left:var(--space-2)">
+        <li style="margin-bottom:var(--space-1)">Students — rewrite essays with appropriate academic tone</li>
+        <li style="margin-bottom:var(--space-1)">Professionals — polish emails and reports to sound professional</li>
+        <li style="margin-bottom:var(--space-1)">Creatives — experiment with different writing styles</li>
+      </ul>
+    </div>
+
+    <!-- FAQ -->
+    <div class="card section-block">
+      <h3 style="margin-bottom:var(--space-2)">FAQ</h3>
+      <div class="faq-item">
+        <div class="faq-q">What tones are available?</div>
+        <div class="faq-a">Professional, Casual, Academic, Creative, and Persuasive. Each tone adjusts vocabulary, sentence structure, and formality.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is it free?</div>
+        <div class="faq-a">Yes, completely free. No signup needed. Up to 5,000 characters per request.</div>
+      </div>
+    </div>
+
+    <!-- Related -->
+    <section class="section-block">
+      <h3 style="margin-bottom:var(--space-2)">Related Tools</h3>
+      <div class="grid-3">
+        <a href="/humanizer/" class="tool-link-card">🤖 Humanizer</a>
+        <a href="/paraphraser/" class="tool-link-card">🔄 Paraphraser</a>
+        <a href="/grammar-checker/" class="tool-link-card">✨ Check Grammar</a>
+        <a href="/summarizer/" class="tool-link-card">📝 Summarizer</a>
+        <a href="/formalize-text/" class="tool-link-card">👔 Formalize Text</a>
+        <a href="/simplify-text/" class="tool-link-card">📖 Simplify Text</a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  const btn = document.getElementById('actionBtn');
+  const textarea = document.getElementById('inputText');
+  const toneSelect = document.getElementById('toneSelect');
+  const resultArea = document.getElementById('resultArea');
+  const resultText = document.getElementById('resultText');
+  const copyBtn = document.getElementById('copyBtn');
+  const statusBadge = document.getElementById('statusBadge');
+  const charCount = document.getElementById('charCount');
+  let isLoading = false;
+
+  btn?.addEventListener('click', async () => {
+    const text = textarea?.value.trim();
+    if (!text || isLoading) return;
+    isLoading = true;
+    btn.disabled = true;
+    btn.textContent = '⏳ Rewriting...';
+    resultArea?.classList.add('hidden');
+    statusBadge?.classList.add('hidden');
+    try {
+      const res = await fetch('/api/tool', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, verb: 'rewrite', tone: toneSelect?.value || 'professional' })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'API error');
+      resultText.textContent = data.result;
+      resultArea?.classList.remove('hidden');
+      statusBadge.textContent = '✅ Done';
+      statusBadge.className = 'stat-badge success';
+      statusBadge.classList.remove('hidden');
+    } catch (err) {
+      resultText.textContent = 'Error: ' + err.message;
+      resultArea?.classList.remove('hidden');
+      statusBadge.textContent = '⚠️ Error';
+      statusBadge.className = 'stat-badge error';
+      statusBadge.classList.remove('hidden');
+    } finally {
+      isLoading = false;
+      btn.disabled = false;
+      btn.textContent = '✏️ Rewrite';
+    }
+  });
+
+  copyBtn?.addEventListener('click', async () => {
+    const text = resultText?.textContent;
+    if (text) {
+      try { await navigator.clipboard.writeText(text); copyBtn.textContent = '✅ Copied!'; setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000); }
+      catch { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); copyBtn.textContent = '✅ Copied!'; setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000); }
+    }
+  });
+
+  textarea?.addEventListener('input', function() { charCount.textContent = this.value.length + ' / 5000'; });
+</script>

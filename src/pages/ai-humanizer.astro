@@ -1,0 +1,136 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Free AI Humanizer — Make AI Text Sound Human | CleverWrite" description="Make AI-written text sound naturally human. Bypass AI detection with our free AI humanizer. No signup required." canonical="/ai-humanizer/">
+  <main class="container section-block" style="padding-top:var(--space-3)">
+    <nav class="breadcrumbs">
+      <a href="/">Home</a>
+      <span>/</span>
+      <span>AI Humanizer</span>
+    </nav>
+
+    <section class="hero" style="padding:var(--space-3) 0">
+      <h1>Free AI Humanizer</h1>
+      <p>Make AI-written text sound naturally human. Bypass GPTZero, Originality & Turnitin.</p>
+    </section>
+
+    <!-- Tool -->
+    <div class="tool-panel">
+      <textarea id="inputText" class="text-input" style="min-height:220px" placeholder="Paste your AI-generated text here..."></textarea>
+      <div class="flex justify-between items-center mt-2">
+        <span style="font-size:var(--text-xs);color:var(--text-muted)" id="charCount">0 / 5000</span>
+        <button id="actionBtn" class="btn-primary">🤖 Humanize Text</button>
+      </div>
+      <div id="resultArea" class="mt-3 hidden">
+        <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Humanized Text</h3>
+        <div id="resultText" class="result-box"></div>
+        <div class="flex gap-1 mt-2 items-center">
+          <button id="copyBtn" class="btn-secondary">📋 Copy</button>
+          <span id="detectionStatus" class="stat-badge success hidden">✅ Detected as Human</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- How To -->
+    <div class="card section-block">
+      <h3 style="margin-bottom:var(--space-2)">How to Use</h3>
+      <ol style="font-size:var(--text-sm);color:var(--text-muted);padding-left:var(--space-2)">
+        <li style="margin-bottom:var(--space-1)">Paste your AI-generated text into the input box</li>
+        <li style="margin-bottom:var(--space-1)">Click "Humanize Text"</li>
+        <li style="margin-bottom:var(--space-1)">Copy the humanized result and use it anywhere</li>
+      </ol>
+    </div>
+
+    <!-- Use Cases -->
+    <div class="card section-block">
+      <h3 style="margin-bottom:var(--space-2)">Use Cases</h3>
+      <ul style="font-size:var(--text-sm);color:var(--text-muted);padding-left:var(--space-2)">
+        <li style="margin-bottom:var(--space-1)">Students — make AI-assisted essays sound natural</li>
+        <li style="margin-bottom:var(--space-1)">Content writers — humanize AI drafts before publishing</li>
+        <li style="margin-bottom:var(--space-1)">Professionals — polish AI-generated emails and reports</li>
+      </ul>
+    </div>
+
+    <!-- FAQ -->
+    <div class="card section-block">
+      <h3 style="margin-bottom:var(--space-2)">FAQ</h3>
+      <div class="faq-item">
+        <div class="faq-q">Does it really bypass AI detectors?</div>
+        <div class="faq-a">Yes. Our AI rewrites text to remove common AI patterns — repetitive structures, overly perfect grammar, and unnatural word choices — making it nearly impossible to detect as AI-generated.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is it free?</div>
+        <div class="faq-a">Yes, completely free. No signup needed. Up to 5,000 characters per request.</div>
+      </div>
+    </div>
+
+    <!-- Related -->
+    <section class="section-block">
+      <h3 style="margin-bottom:var(--space-2)">Related Tools</h3>
+      <div class="grid-3">
+        <a href="/humanizer/" class="tool-link-card">🤖 Humanizer</a>
+        <a href="/humanize-essay/" class="tool-link-card">📄 Humanize Essay</a>
+        <a href="/humanize-chatgpt/" class="tool-link-card">🤖 Humanize ChatGPT</a>
+        <a href="/paraphraser/" class="tool-link-card">🔄 Paraphraser</a>
+        <a href="/grammar-checker/" class="tool-link-card">✨ Grammar Checker</a>
+        <a href="/smart-rewriter/" class="tool-link-card">✏️ Smart Rewriter</a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  const btn = document.getElementById('actionBtn');
+  const textarea = document.getElementById('inputText');
+  const resultArea = document.getElementById('resultArea');
+  const resultText = document.getElementById('resultText');
+  const copyBtn = document.getElementById('copyBtn');
+  const detectionStatus = document.getElementById('detectionStatus');
+  const charCount = document.getElementById('charCount');
+  let isLoading = false;
+
+  btn?.addEventListener('click', async () => {
+    const text = textarea?.value.trim();
+    if (!text || isLoading) return;
+    isLoading = true;
+    btn.disabled = true;
+    btn.textContent = '⏳ Processing...';
+    resultArea?.classList.add('hidden');
+    detectionStatus?.classList.add('hidden');
+    try {
+      const res = await fetch('/api/humanize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, tone: 'casual' })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'API error');
+      resultText.textContent = data.result;
+      resultArea?.classList.remove('hidden');
+      detectionStatus.textContent = '✅ Detected as Human';
+      detectionStatus.className = 'stat-badge success';
+      detectionStatus.classList.remove('hidden');
+    } catch (err) {
+      resultText.textContent = 'Error: ' + err.message;
+      resultArea?.classList.remove('hidden');
+      detectionStatus.textContent = '⚠️ Error';
+      detectionStatus.className = 'stat-badge error';
+      detectionStatus.classList.remove('hidden');
+    } finally {
+      isLoading = false;
+      btn.disabled = false;
+      btn.textContent = '🤖 Humanize Text';
+    }
+  });
+
+  copyBtn?.addEventListener('click', async () => {
+    const text = resultText?.textContent;
+    if (text) {
+      try { await navigator.clipboard.writeText(text); copyBtn.textContent = '✅ Copied!'; setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000); }
+      catch { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); copyBtn.textContent = '✅ Copied!'; setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000); }
+    }
+  });
+
+  textarea?.addEventListener('input', function() { charCount.textContent = this.value.length + ' / 5000'; });
+</script>

@@ -2,60 +2,50 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Free AI Detector — Check If Text Is AI-Generated | CleverWrite">
-  <main class="container">
-    <section class="text-center mb-8">
-      <h1 class="text-4xl font-bold mb-2">Free AI Detector</h1>
-      <p class="text-gray-600">Check if text was written by AI. Detects GPTZero, ChatGPT, Claude & more.</p>
+<Layout title="Free AI Detector — Check If Text Is AI-Generated | CleverWrite" description="Check if text was written by AI. Detects GPTZero, ChatGPT, Claude & more. Free AI detection tool." canonical="/ai-detector/">
+  <main class="container" style="padding-top:var(--space-4);padding-bottom:var(--space-5)">
+    <section style="margin-bottom:var(--space-2)">
+      <h1 style="font-size:1.75rem;font-weight:700;color:var(--text-title);margin-bottom:4px">Free AI Detector</h1>
+      <p style="color:var(--text-muted);font-size:var(--text-sm)">Check if text was written by AI. Detects GPT3, ChatGPT, Claude, and more.</p>
     </section>
 
-    <section class="tool-panel mb-8">
+    <section class="tool-panel">
       <textarea
         id="inputText"
-        class="w-full h-48 border border-gray-300 rounded-lg p-4 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
-        placeholder="Paste text to analyze..."
+        class="text-input"
+        style="min-height:220px;width:100%"
+        placeholder="Paste text here to detect AI..."
       ></textarea>
 
-      <div class="flex justify-between items-center mt-4">
-        <span class="text-sm text-gray-400" id="charCount">0 / 10000 characters</span>
-        <button id="detectBtn" class="btn-primary">
-          🔍 Detect AI
+      <div style="display:flex;justify-content:flex-end;align-items:center;gap:var(--space-2);margin-top:var(--space-2)">
+        <span style="font-size:var(--text-sm);color:var(--text-muted)" id="charCount">0 / 10000 characters</span>
+        <button id="detectBtn" class="btn-primary" style="padding:var(--space-1) var(--space-2)">
+          Detect AI
         </button>
       </div>
 
-      <!-- Result -->
-      <div id="resultArea" class="result-box mt-6 hidden">
-        <div class="flex items-center gap-4 mb-4">
-          <div class="stat-badge text-4xl font-bold" id="scoreDisplay">--</div>
+      <div id="resultArea" style="display:none;margin-top:var(--space-3)">
+        <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-2)">
+          <div style="font-size:2.5rem;font-weight:700;color:var(--color-primary)" id="scoreDisplay">--</div>
           <div>
-            <div class="text-xl font-semibold" id="labelDisplay">--</div>
-            <div class="text-sm text-gray-500">AI probability score</div>
+            <div style="font-size:var(--text-base);font-weight:600;color:var(--text-title)" id="labelDisplay">--</div>
+            <div style="font-size:var(--text-xs);color:var(--text-muted)">AI probability score</div>
           </div>
         </div>
 
-        <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
-          <div id="scoreBar" class="score-bar h-3 rounded-full transition-all duration-500" style="width:0%"></div>
+        <div style="width:100%;height:12px;background:var(--border-base);border-radius:6px;margin-bottom:var(--space-2);overflow:hidden">
+          <div id="scoreBar" style="height:100%;border-radius:6px;width:0%;transition:width 0.5s ease"></div>
         </div>
 
-        <div id="reasonsArea" class="section-block mb-4">
-          <h3 class="font-semibold mb-2">Analysis</h3>
-          <ul id="reasonsList" class="list-disc list-inside text-sm text-gray-700 space-y-1"></ul>
+        <div style="margin-bottom:var(--space-2)">
+          <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:6px;color:var(--text-title)">Analysis</h3>
+          <ul id="reasonsList" style="font-size:var(--text-sm);color:var(--text-muted);padding-left:var(--space-2)"></ul>
         </div>
 
-        <div id="highlightsArea" class="section-block">
-          <h3 class="font-semibold mb-2">Suspicious Phrases</h3>
-          <div id="highlightsList" class="text-sm text-gray-700"></div>
+        <div>
+          <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:6px;color:var(--text-title)">Suspicious Phrases</h3>
+          <div id="highlightsList" style="font-size:var(--text-sm);color:var(--text-muted)"></div>
         </div>
-      </div>
-    </section>
-
-    <!-- Related Tools -->
-    <section class="border-t pt-8">
-      <h2 class="text-xl font-semibold mb-4">Related Tools</h2>
-      <div class="grid-3">
-        <a href="/humanizer/" class="card">🤖 AI Humanizer</a>
-        <a href="/grammar-checker/" class="card">📝 Grammar Checker</a>
-        <a href="/paraphraser/" class="card">🔄 Paraphraser</a>
       </div>
     </section>
   </main>
@@ -74,18 +64,18 @@ import Layout from '../layouts/Layout.astro';
   let isLoading = false;
 
   function getScoreColor(score) {
-    if (score >= 80) return 'bg-red-500';
-    if (score >= 60) return 'bg-orange-500';
-    if (score >= 40) return 'bg-yellow-500';
-    if (score >= 20) return 'bg-lime-500';
-    return 'bg-green-500';
+    if (score >= 80) return '#EF4444';
+    if (score >= 60) return '#F97316';
+    if (score >= 40) return '#EAB308';
+    if (score >= 20) return '#84CC16';
+    return '#10B981';
   }
 
   function getScoreTextColor(score) {
-    if (score >= 80) return 'text-red-600';
-    if (score >= 60) return 'text-orange-600';
-    if (score >= 40) return 'text-yellow-600';
-    return 'text-green-600';
+    if (score >= 80) return '#DC2626';
+    if (score >= 60) return '#EA580C';
+    if (score >= 40) return '#CA8A04';
+    return '#16A34A';
   }
 
   detectBtn?.addEventListener('click', async () => {
@@ -95,7 +85,7 @@ import Layout from '../layouts/Layout.astro';
     isLoading = true;
     detectBtn.disabled = true;
     detectBtn.textContent = '⏳ Analyzing...';
-    resultArea?.classList.add('hidden');
+    resultArea.style.display = 'none';
 
     try {
       const res = await fetch('/api/detect', {
@@ -109,12 +99,11 @@ import Layout from '../layouts/Layout.astro';
 
       const score = data.score || 0;
       scoreDisplay.textContent = score + '%';
-      scoreDisplay.className = 'stat-badge text-4xl font-bold ' + getScoreTextColor(score);
+      scoreDisplay.style.color = getScoreTextColor(score);
       labelDisplay.textContent = data.label || 'Uncertain';
       scoreBar.style.width = score + '%';
-      scoreBar.className = 'score-bar h-3 rounded-full transition-all duration-500 ' + getScoreColor(score);
+      scoreBar.style.background = getScoreColor(score);
 
-      // Reasons
       reasonsList.innerHTML = '';
       (data.reasons || ['Analysis complete']).forEach(r => {
         const li = document.createElement('li');
@@ -122,29 +111,27 @@ import Layout from '../layouts/Layout.astro';
         reasonsList.appendChild(li);
       });
 
-      // Highlights
       highlightsList.innerHTML = '';
       if (data.highlights && data.highlights.length > 0) {
         data.highlights.forEach(h => {
           const span = document.createElement('span');
-          span.className = 'inline-block bg-red-50 text-red-700 px-2 py-1 rounded mr-2 mb-2 text-sm';
+          span.style.cssText = 'display:inline-block;background:rgba(239,68,68,0.1);color:#DC2626;padding:2px 8px;border-radius:4px;margin-right:6px;margin-bottom:6px;font-size:var(--text-xs)';
           span.textContent = '"' + h + '"';
           highlightsList.appendChild(span);
         });
       } else {
         highlightsList.textContent = 'No suspicious patterns detected.';
-        highlightsList.className = 'text-sm text-gray-500';
       }
 
-      resultArea?.classList.remove('hidden');
+      resultArea.style.display = 'block';
     } catch (err) {
       scoreDisplay.textContent = '⚠️';
       labelDisplay.textContent = 'Error: ' + err.message;
-      resultArea?.classList.remove('hidden');
+      resultArea.style.display = 'block';
     } finally {
       isLoading = false;
       detectBtn.disabled = false;
-      detectBtn.textContent = '🔍 Detect AI';
+      detectBtn.textContent = 'Detect AI';
     }
   });
 
