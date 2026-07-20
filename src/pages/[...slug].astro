@@ -28,7 +28,7 @@ const verbExamples = [
     <nav class="breadcrumbs" style="padding-top:var(--space-2);margin-bottom:var(--space-2)">
       <a href="/">Home</a>
       <span>/</span>
-      <a href="/tools">{displayVerb}</a>
+      <a href="/tools/">{displayVerb}</a>
       <span>/</span>
       <span>{contentType}</span>
     </nav>
@@ -98,7 +98,7 @@ const verbExamples = [
       <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-2)">Related {displayVerb} Tools</h3>
       <div class="grid-4">
         {related.map(p => (
-          <a href={`/${p.slug}`} class="tool-link-card" style="font-size:var(--text-xs);padding:var(--space-1) var(--space-2)">
+          <a href={`/${p.slug}/`} class="tool-link-card" style="font-size:var(--text-xs);padding:var(--space-1) var(--space-2)">
             {icon} {p.contentType}
           </a>
         ))}
