@@ -20,7 +20,6 @@ const corePages = [
   '/rewrite-essay',
   '/pricing',
   '/privacy',
-  '/contact',
 ];
 
 const today = new Date().toISOString().split('T')[0];
