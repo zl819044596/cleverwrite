@@ -43,8 +43,17 @@ import Layout from '../layouts/Layout.astro';
         <a href="/paraphraser/" class="badge-link">🔄 Paraphraser</a>
         <a href="/summarizer/" class="badge-link">📝 Summarizer</a>
         <a href="/translator/" class="badge-link">🌐 Translator</a>
+        <a href="/smart-rewriter/" class="badge-link">🧠 Smart Rewriter</a>
       </div>
     </div>
+  </section>
+
+  <!-- Trust Strip -->
+  <section class="trust-strip">
+    <span class="trust-item"><span class="icon">🔒</span> Encrypted processing</span>
+    <span class="trust-item"><span class="icon">🚫</span> No storage</span>
+    <span class="trust-item"><span class="icon">🆓</span> No signup required</span>
+    <span class="trust-item"><span class="icon">♾️</span> Unlimited usage</span>
   </section>
 
   <!-- Minimal below-fold: just core tools -->
@@ -63,7 +72,41 @@ import Layout from '../layouts/Layout.astro';
         </a>
       </div>
     </section>
+
+    <!-- All Tools Grid -->
+    <section class="section-block">
+      <h2 class="section-title text-center">All Writing Tools</h2>
+      <p class="section-subtitle text-center">Free AI-powered tools for every writing need</p>
+      <div class="tools-grid">
+        <a href="/humanizer/" class="tool-pill"><span class="emoji">🤖</span> AI Humanizer</a>
+        <a href="/ai-detector/" class="tool-pill"><span class="emoji">🔍</span> AI Detector</a>
+        <a href="/grammar-checker/" class="tool-pill"><span class="emoji">✨</span> Grammar Checker</a>
+        <a href="/paraphraser/" class="tool-pill"><span class="emoji">🔄</span> Paraphraser</a>
+        <a href="/summarizer/" class="tool-pill"><span class="emoji">📝</span> Summarizer</a>
+        <a href="/translator/" class="tool-pill"><span class="emoji">🌐</span> Translator</a>
+        <a href="/smart-rewriter/" class="tool-pill"><span class="emoji">🧠</span> Smart Rewriter</a>
+        <a href="/improver/" class="tool-pill"><span class="emoji">⬆️</span> Text Improver</a>
+        <a href="/expander/" class="tool-pill"><span class="emoji">🔍</span> Text Expander</a>
+        <a href="/plagiarism-checker/" class="tool-pill"><span class="emoji">📋</span> Plagiarism Checker</a>
+        <a href="/citation-generator/" class="tool-pill"><span class="emoji">📚</span> Citation Generator</a>
+        <a href="/essay-writer/" class="tool-pill"><span class="emoji">✍️</span> Essay Writer</a>
+      </div>
+    </section>
   </main>
+
+  <!-- Upgrade Modal -->
+  <div id="upgradeModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="upgradeModalClose" aria-label="Close">✕</button>
+      <div class="modal-icon">⚡</div>
+      <h3>Free Limit Reached</h3>
+      <p>You've used your 3 free humanizations today. Upgrade to Pro for unlimited access, priority processing, and advanced features.</p>
+      <div class="modal-actions">
+        <a href="/pricing/" class="btn-primary">View Plans</a>
+        <button id="upgradeModalLater" class="btn-secondary">Maybe Later</button>
+      </div>
+    </div>
+  </div>
 </Layout>
 
 <style>
@@ -280,7 +323,16 @@ import Layout from '../layouts/Layout.astro';
         body: JSON.stringify({ text, tone: 'casual' })
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'API error');
+      if (!res.ok) {
+        // Check for rate limit / daily limit errors
+        if (res.status === 429 || data.limit || (data.error && data.error.toLowerCase().includes('limit'))) {
+          showUpgradeModal();
+          heroOutput.textContent = '⚠️ Daily limit reached. Upgrade to Pro for unlimited access.';
+          heroOutput.classList.remove('loading');
+          return;
+        }
+        throw new Error(data.error || 'API error');
+      }
       heroOutput.textContent = data.result;
       heroOutput.classList.remove('loading');
     } catch (err) {
@@ -291,4 +343,26 @@ import Layout from '../layouts/Layout.astro';
       heroBtn.disabled = false;
     }
   });
+
+  // Upgrade modal
+  const upgradeModal = document.getElementById('upgradeModal');
+  const upgradeClose = document.getElementById('upgradeModalClose');
+  const upgradeLater = document.getElementById('upgradeModalLater');
+
+  function showUpgradeModal() {
+    upgradeModal?.classList.remove('hidden');
+  }
+
+  function hideUpgradeModal() {
+    upgradeModal?.classList.add('hidden');
+  }
+
+  upgradeClose?.addEventListener('click', hideUpgradeModal);
+  upgradeLater?.addEventListener('click', hideUpgradeModal);
+  upgradeModal?.addEventListener('click', (e) => {
+    if (e.target === upgradeModal) hideUpgradeModal();
+  });
+
+  // Expose modal trigger globally so other scripts can call it
+  window.showUpgradeModal = showUpgradeModal;
 </script>
