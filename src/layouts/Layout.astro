@@ -8,7 +8,6 @@ export interface Props {
 
 const { title, description, canonical, metaKeywords } = Astro.props;
 const year = new Date().getFullYear();
-const gaMeasurementId = 'G-CJEFQ6LXCF';
 ---
 
 <!doctype html>
@@ -25,12 +24,12 @@ const gaMeasurementId = 'G-CJEFQ6LXCF';
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={gaMeasurementId}"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CJEFQ6LXCF"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', gaMeasurementId);
+      gtag('config', 'G-CJEFQ6LXCF');
     </script>
     <script>
       // Dark mode detection
