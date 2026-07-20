@@ -6,6 +6,7 @@ const corePages = [
   '/',
   '/tools',
   '/humanizer',
+  '/ai-humanizer',
   '/ai-detector',
   '/grammar-checker',
   '/paraphraser',
@@ -13,6 +14,13 @@ const corePages = [
   '/improver',
   '/expander',
   '/shortener',
+  '/translator',
+  '/smart-rewriter',
+  '/polish-email',
+  '/rewrite-essay',
+  '/pricing',
+  '/privacy',
+  '/contact',
 ];
 
 const today = new Date().toISOString().split('T')[0];
@@ -24,15 +32,19 @@ export const GET = async () => {
   const urls = [];
 
   // Core pages — homepage gets highest priority
+  const coreSet = new Set(corePages);
   for (const slug of corePages) {
     const priority = slug === '/' ? '1.0' : '0.9';
     const freq = slug === '/' ? 'daily' : 'weekly';
     urls.push(urlXml(slug, freq, priority));
   }
 
-  // All programmatic pages
+  // All programmatic pages (skip any already in core pages)
   for (const page of pages) {
-    urls.push(urlXml(`/${page.slug}`, 'weekly', '0.7'));
+    const slug = `/${page.slug}`;
+    if (!coreSet.has(slug)) {
+      urls.push(urlXml(slug, 'weekly', '0.7'));
+    }
   }
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`;
