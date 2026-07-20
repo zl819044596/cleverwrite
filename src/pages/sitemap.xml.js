@@ -25,8 +25,11 @@ const corePages = [
 
 const today = new Date().toISOString().split('T')[0];
 
-const urlXml = (loc, changefreq = 'weekly', priority = '0.8') =>
-  `  <url>\n    <loc>${BASE_URL}${loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+const urlXml = (loc, changefreq = 'weekly', priority = '0.8') => {
+  // Ensure trailing slash for all non-root paths
+  const url = loc === '/' ? '/' : loc.endsWith('/') ? loc : `${loc}/`;
+  return `  <url>\n    <loc>${BASE_URL}${url}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+};
 
 export const GET = async () => {
   const urls = [];

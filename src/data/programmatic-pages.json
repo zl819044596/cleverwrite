@@ -560,6 +560,16 @@
     "keywords": "formalize stories, make stories formal, formal stories writing"
   },
   {
+    "slug": "formalize-text",
+    "verb": "formalize",
+    "displayVerb": "Formalize",
+    "displayAction": "Formalize",
+    "contentType": "Text",
+    "h1": "Formalize Text \u2014 Free AI Tool",
+    "desc": "Make any text more formal and professional in tone.",
+    "keywords": "formalize text, formal text tool, make text professional, formal writing tool"
+  },
+  {
     "slug": "formalize-tiktok-script",
     "verb": "formalize",
     "displayVerb": "Formalize",
@@ -4158,6 +4168,16 @@
     "h1": "Simplify Term Paper \u2014 Free AI Tool",
     "desc": "Simplify your term paper to be easier to understand. Use plain language.",
     "keywords": "simplify term papers, term papers simplifier, plain language term papers"
+  },
+  {
+    "slug": "simplify-text",
+    "verb": "simplify",
+    "displayVerb": "Simplify",
+    "displayAction": "Simplify",
+    "contentType": "Text",
+    "h1": "Simplify Text \u2014 Free AI Tool",
+    "desc": "Simplify any text to make it easier to read and understand.",
+    "keywords": "simplify text, text simplifier, simplify writing, make text easier to read"
   },
   {
     "slug": "simplify-thesis",
